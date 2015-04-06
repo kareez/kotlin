@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.serialization.js
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.ExtensionRegistryLite
+import com.intellij.openapi.util.io.FileUtil
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.load.kotlin.PackageClassUtils
 import org.jetbrains.kotlin.name.ClassId
@@ -34,6 +35,7 @@ import org.jetbrains.kotlin.storage.StorageManager
 import org.jetbrains.kotlin.utils.KotlinJavascriptMetadataUtils
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 import kotlin.platform.platformStatic
@@ -46,7 +48,7 @@ public object KotlinJavascriptSerializationUtil {
         JsProtoBuf.registerAllExtensions(EXTENSION_REGISTRY)
     }
 
-    private val CLASS_METADATA_FILE_EXTENSION: String = "kjsm"
+    public val CLASS_METADATA_FILE_EXTENSION: String = "kjsm"
 
     private val PACKAGE_DEFAULT_BYTES = run {
         val stream = ByteArrayOutputStream()
@@ -109,19 +111,21 @@ public object KotlinJavascriptSerializationUtil {
         return byteStream.toByteArray()
     }
 
-    public fun metadataAsString(moduleName: String, moduleDescriptor: ModuleDescriptor): String {
-        val contentMap = hashMapOf<String, ByteArray>()
+    public fun metadataAsString(moduleName: String, moduleDescriptor: ModuleDescriptor): String =
+        KotlinJavascriptMetadataUtils.formatMetadataAsString(moduleName, moduleDescriptor.toBinaryMetadata())
 
-        DescriptorUtils.getPackagesFqNames(moduleDescriptor).forEach {
-            fqName ->
-            serializePackage(moduleDescriptor, fqName) {
-                fileName, stream ->
-                contentMap[fileName] = stream.toByteArray()
-            }
-        }
+    platformStatic
+    public fun writeMetadataFiles(moduleName: String, moduleDescriptor: ModuleDescriptor, outputDir: File) {
+        val contentMap = moduleDescriptor.toContentMap()
+        val outDir = File(outputDir, moduleName)
+        writeFiles(contentMap, outDir)
+    }
 
-        val content = KotlinJavascriptSerializationUtil.contentMapToByteArray(contentMap)
-        return KotlinJavascriptMetadataUtils.formatMetadataAsString(moduleName, content)
+    platformStatic
+    public fun writeMetadataFiles(moduleName: String, metadata: ByteArray, outputDir: File) {
+        val contentMap = metadata.toContentMap()
+        val outDir = File(outputDir, moduleName)
+        writeFiles(contentMap, outDir)
     }
 
     fun serializePackage(module: ModuleDescriptor, fqName: FqName, writeFun: (String, ByteArrayOutputStream) -> Unit) {
@@ -203,6 +207,18 @@ public object KotlinJavascriptSerializationUtil {
         return contentMap
     }
 
+    private fun ModuleDescriptor.toContentMap(): Map<String, ByteArray> {
+        val contentMap = hashMapOf<String, ByteArray>()
+
+        DescriptorUtils.getPackagesFqNames(this).forEach {
+            serializePackage(this, it) {
+                fileName, stream -> contentMap[fileName] = stream.toByteArray()
+            }
+        }
+
+        return contentMap
+    }
+
     private fun isPackageMetadataFile(fileName: String): Boolean =
             getPackageFilePath(getPackageFqName(fileName)) == fileName
 
@@ -257,5 +273,11 @@ public object KotlinJavascriptSerializationUtil {
 
     private fun shortName(fqName: FqName): String =
             if (fqName.isRoot()) "default-package" else fqName.shortName().asString()
-}
 
+    private fun ModuleDescriptor.toBinaryMetadata(): ByteArray =
+            KotlinJavascriptSerializationUtil.contentMapToByteArray(this.toContentMap())
+
+    private fun writeFiles(contentMap: Map<String, ByteArray>, outputDir: File) {
+        contentMap.keySet().forEach { FileUtil.writeToFile(File(outputDir, it), contentMap[it]!!) }
+    }
+}
