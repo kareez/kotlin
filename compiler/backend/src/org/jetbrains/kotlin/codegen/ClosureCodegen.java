@@ -306,7 +306,15 @@ public class ClosureCodegen extends MemberCodegen<JetElement> {
             }
 
             iv.load(0, superClassAsmType);
-            iv.invokespecial(superClassAsmType.getInternalName(), "<init>", "()V", false);
+
+            // TODO: unhardcode Lambda class internal name
+            if (superClassAsmType.getDescriptor().equals("Lkotlin/jvm/internal/Lambda;")) {
+                iv.iconst(funDescriptor.getValueParameters().size());
+                iv.invokespecial(superClassAsmType.getInternalName(), "<init>", "(I)V", false);
+            }
+            else {
+                iv.invokespecial(superClassAsmType.getInternalName(), "<init>", "()V", false);
+            }
 
             iv.visitInsn(RETURN);
 
