@@ -904,6 +904,12 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
             JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/codegen/box/classes"), Pattern.compile("^(.+)\\.kt$"), true);
         }
 
+        @TestMetadata("assignPlusOnSmartCast.kt")
+        public void testAssignPlusOnSmartCast() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/assignPlusOnSmartCast.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("boxPrimitiveTypeInClinitOfClassObject.kt")
         public void testBoxPrimitiveTypeInClinitOfClassObject() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/boxPrimitiveTypeInClinitOfClassObject.kt");
@@ -1465,6 +1471,84 @@ public class BlackBoxCodegenTestGenerated extends AbstractBlackBoxCodegenTest {
         @TestMetadata("overloadUnaryOperator.kt")
         public void testOverloadUnaryOperator() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/overloadUnaryOperator.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("postfixIncrementOnClass.kt")
+        public void testPostfixIncrementOnClass() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/postfixIncrementOnClass.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("postfixIncrementOnClassSmartCast.kt")
+        public void testPostfixIncrementOnClassSmartCast() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/postfixIncrementOnClassSmartCast.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("postfixIncrementOnShortSmartCast.kt")
+        public void testPostfixIncrementOnShortSmartCast() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/postfixIncrementOnShortSmartCast.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("postfixIncrementOnSmartCast.kt")
+        public void testPostfixIncrementOnSmartCast() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/postfixIncrementOnSmartCast.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("postfixNotnullClassIncrement.kt")
+        public void testPostfixNotnullClassIncrement() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/postfixNotnullClassIncrement.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("postfixNullableClassIncrement.kt")
+        public void testPostfixNullableClassIncrement() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/postfixNullableClassIncrement.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("postfixNullableIncrement.kt")
+        public void testPostfixNullableIncrement() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/postfixNullableIncrement.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("prefixIncrementOnClass.kt")
+        public void testPrefixIncrementOnClass() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/prefixIncrementOnClass.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("prefixIncrementOnClassSmartCast.kt")
+        public void testPrefixIncrementOnClassSmartCast() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/prefixIncrementOnClassSmartCast.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("prefixIncrementOnSmartCast.kt")
+        public void testPrefixIncrementOnSmartCast() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/prefixIncrementOnSmartCast.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("prefixNotnullClassIncrement.kt")
+        public void testPrefixNotnullClassIncrement() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/prefixNotnullClassIncrement.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("prefixNullableClassIncrement.kt")
+        public void testPrefixNullableClassIncrement() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/prefixNullableClassIncrement.kt");
+            doTest(fileName);
+        }
+
+        @TestMetadata("prefixNullableIncrement.kt")
+        public void testPrefixNullableIncrement() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("compiler/testData/codegen/box/classes/prefixNullableIncrement.kt");
             doTest(fileName);
         }
 

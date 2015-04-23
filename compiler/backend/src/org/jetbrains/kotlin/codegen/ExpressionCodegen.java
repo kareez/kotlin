@@ -3323,7 +3323,9 @@ public class ExpressionCodegen extends JetVisitor<StackValue, StackValue> implem
         final boolean isPrimitiveNumberClassDescriptor = isPrimitiveNumberClassDescriptor(cls);
         if (isPrimitiveNumberClassDescriptor && AsmUtil.isPrimitive(asmBaseType)) {
             JetExpression operand = expression.getBaseExpression();
-            if (operand instanceof JetReferenceExpression && asmResultType == Type.INT_TYPE) {
+            // Optimization for j = i++, when j and i are Int without any smart cast: we gust work with primitive int
+            if (operand instanceof JetReferenceExpression && asmResultType == Type.INT_TYPE &&
+                bindingContext.get(BindingContext.SMARTCAST, operand) == null) {
                 int index = indexOfLocal((JetReferenceExpression) operand);
                 if (index >= 0) {
                     return StackValue.postIncrement(index, increment);
