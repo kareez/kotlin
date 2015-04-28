@@ -39,8 +39,10 @@ import org.jetbrains.kotlin.types.checker.JetTypeChecker;
 
 import java.util.*;
 
+import static org.jetbrains.kotlin.builtins.KotlinBuiltIns.isAny;
 import static org.jetbrains.kotlin.descriptors.CallableMemberDescriptor.Kind.*;
 import static org.jetbrains.kotlin.descriptors.ReceiverParameterDescriptor.NO_RECEIVER_PARAMETER;
+import static org.jetbrains.kotlin.resolve.descriptorUtil.DescriptorUtilPackage.getBuiltIns;
 
 public class DescriptorUtils {
     public static final Name ENUM_VALUES = Name.identifier("values");
@@ -189,10 +191,15 @@ public class DescriptorUtils {
 
     @Nullable
     public static ModuleDescriptor getContainingModuleOrNull(@NotNull DeclarationDescriptor descriptor) {
-        if (descriptor instanceof PackageViewDescriptor) {
-            return ((PackageViewDescriptor) descriptor).getModule();
+        ModuleDescriptor moduleDescriptor = getParentOfType(descriptor, ModuleDescriptor.class, false);
+        if (moduleDescriptor != null) {
+            return moduleDescriptor;
         }
-        return getParentOfType(descriptor, ModuleDescriptor.class, false);
+        PackageViewDescriptor packageViewDescriptor = getParentOfType(descriptor, PackageViewDescriptor.class, false);
+        if (packageViewDescriptor != null) {
+            return packageViewDescriptor.getModule();
+        }
+        return null;
     }
 
     @Nullable
@@ -329,7 +336,7 @@ public class DescriptorUtils {
                 return type;
             }
         }
-        return KotlinBuiltIns.getInstance().getAnyType();
+        return getBuiltIns(classDescriptor).getAnyType();
     }
 
     @NotNull
@@ -343,10 +350,6 @@ public class DescriptorUtils {
         assert descriptor instanceof ClassDescriptor
             : "Classifier descriptor of a type should be of type ClassDescriptor: " + typeConstructor;
         return (ClassDescriptor) descriptor;
-    }
-
-    public static boolean isAny(@NotNull DeclarationDescriptor superClassDescriptor) {
-        return superClassDescriptor.equals(KotlinBuiltIns.getInstance().getAny());
     }
 
     @NotNull
@@ -429,7 +432,7 @@ public class DescriptorUtils {
 
         if (type instanceof LazyType || type.isMarkedNullable()) return true;
 
-        KotlinBuiltIns builtIns = KotlinBuiltIns.getInstance();
+        KotlinBuiltIns builtIns = getBuiltIns(variable);
         return KotlinBuiltIns.isPrimitiveType(type) ||
                JetTypeChecker.DEFAULT.equalTypes(builtIns.getStringType(), type) ||
                JetTypeChecker.DEFAULT.equalTypes(builtIns.getNumber().getDefaultType(), type) ||
