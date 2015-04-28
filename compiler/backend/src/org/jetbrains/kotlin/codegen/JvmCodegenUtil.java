@@ -230,7 +230,7 @@ public class JvmCodegenUtil {
                : descriptor;
     }
 
-    public static boolean isLambdaWhichWillBeInlined(@NotNull BindingContext bindingContext, @NotNull DeclarationDescriptor descriptor) {
+    public static boolean isArgumentWhichWillBeInlined(@NotNull BindingContext bindingContext, @NotNull DeclarationDescriptor descriptor) {
         PsiElement declaration = DescriptorToSourceUtils.descriptorToDeclaration(descriptor);
         return InlineUtil.canBeInlineArgument(declaration) &&
                InlineUtil.isInlinedArgument((JetFunction) declaration, bindingContext, false);
