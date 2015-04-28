@@ -40,7 +40,7 @@ import org.jetbrains.kotlin.resolve.calls.callUtil.getResolvedCall
 import org.jetbrains.kotlin.resolve.scopes.receivers.ClassReceiver
 import org.jetbrains.kotlin.utils.addToStdlib.singletonOrEmptyList
 
-val isTargetUsage = (PsiReference::matchesTarget).searchFilter
+val isTargetUsage = (fun PsiReference.(it: PsiNamedElement) = matchesTarget(it)).searchFilter
 
 fun PsiNamedElement.getAccessorNames(readable: Boolean = true, writable: Boolean = true): List<String> {
     fun PropertyAccessorsPsiMethods.toNameList(): List<String> {
@@ -128,7 +128,7 @@ public abstract class UsagesSearchHelper<T : PsiNamedElement> {
     }
 }
 
-val isNotImportUsage = !((PsiReference::isImportUsage).searchFilter)
+val isNotImportUsage = !((fun PsiReference.() = isImportUsage()).searchFilter)
 
 trait ImportAwareSearchHelper {
     public val skipImports: Boolean
@@ -143,7 +143,7 @@ open class DefaultSearchHelper<T: PsiNamedElement>(
     override fun makeFilter(target: UsagesSearchTarget<T>): UsagesSearchFilter = isTargetUsage and isFilteredImport
 }
 
-val isClassConstructorUsage = (PsiReference::isConstructorUsage).searchFilter
+val isClassConstructorUsage = (fun PsiReference.(it: JetClassOrObject) = isConstructorUsage(it)).searchFilter
 
 class ClassUsagesSearchHelper(
         public val constructorUsages: Boolean = false,
@@ -204,7 +204,7 @@ class ClassDeclarationsUsagesSearchHelper(
     }
 }
 
-val isOverrideUsage = (PsiReference::isCallableOverrideUsage).searchFilter
+val isOverrideUsage = (fun PsiReference.(it: JetNamedDeclaration) = isCallableOverrideUsage(it)).searchFilter
 
 trait OverrideSearchHelper {
     public val selfUsages: Boolean
@@ -214,8 +214,8 @@ trait OverrideSearchHelper {
         get() = isTargetUsage.ifOrFalse(selfUsages) or isOverrideUsage.ifOrFalse(overrideUsages)
 }
 
-val isOverloadUsage = (PsiReference::isUsageInContainingDeclaration).searchFilter
-val isExtensionUsage = (PsiReference::isExtensionOfDeclarationClassUsage).searchFilter
+val isOverloadUsage = (fun PsiReference.(it: JetNamedDeclaration) = isUsageInContainingDeclaration(it)).searchFilter
+val isExtensionUsage = (fun PsiReference.(it: JetNamedDeclaration) = isExtensionOfDeclarationClassUsage(it)).searchFilter
 
 class FunctionUsagesSearchHelper(
         public val overloadUsages: Boolean = false,
@@ -231,7 +231,7 @@ class FunctionUsagesSearchHelper(
     }
 }
 
-val isPropertyReadOnlyUsage = (PsiReference::isPropertyReadOnlyUsage).searchFilter
+val isPropertyReadOnlyUsage = (fun PsiReference.() = isPropertyReadOnlyUsage()).searchFilter
 
 // Used for JetProperty and JetParameter
 class PropertyUsagesSearchHelper(

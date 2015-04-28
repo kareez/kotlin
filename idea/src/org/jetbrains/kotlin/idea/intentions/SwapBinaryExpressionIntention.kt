@@ -69,11 +69,11 @@ public class SwapBinaryExpressionIntention : JetSelfTargetingIntention<JetBinary
     }
 
     private fun leftSubject(element: JetBinaryExpression): JetExpression? {
-        return firstDescendantOfTighterPrecedence(element.getLeft(), JetPsiPrecedences.getPrecedence(element), JetBinaryExpression::getRight)
+        return firstDescendantOfTighterPrecedence(element.getLeft(), JetPsiPrecedences.getPrecedence(element), fun JetBinaryExpression.() = getRight())
     }
 
     private fun rightSubject(element: JetBinaryExpression): JetExpression? {
-        return firstDescendantOfTighterPrecedence(element.getRight(), JetPsiPrecedences.getPrecedence(element), JetBinaryExpression::getLeft)
+        return firstDescendantOfTighterPrecedence(element.getRight(), JetPsiPrecedences.getPrecedence(element), fun JetBinaryExpression.() = getLeft())
     }
 
     private fun firstDescendantOfTighterPrecedence(expression: JetExpression?, precedence: Int, getChild: JetBinaryExpression.() -> JetExpression?): JetExpression? {
