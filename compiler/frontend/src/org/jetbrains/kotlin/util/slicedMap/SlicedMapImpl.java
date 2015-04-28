@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.UserDataHolder;
+import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -33,7 +34,7 @@ public class SlicedMapImpl implements MutableSlicedMap {
     private static final Map<Key, WritableSlice> mapKeyToSlice = new IdentityHashMap<Key, WritableSlice>();
 
     // TODO replace Object with PsiElement?
-    private final Map<Object, MyUserDataHolder> map = new HashMap<Object, MyUserDataHolder>();
+    private final Map<Object, MyUserDataHolder> map = new THashMap<Object, MyUserDataHolder>();
     private final Multimap<WritableSlice<?, ?>, Object> collectiveSliceKeys = ArrayListMultimap.create();
 
     @Override
