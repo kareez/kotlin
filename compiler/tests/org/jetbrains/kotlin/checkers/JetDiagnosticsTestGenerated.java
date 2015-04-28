@@ -11672,6 +11672,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                     doTest(fileName);
                 }
 
+                @TestMetadata("kt7599.kt")
+                public void testKt7599() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/smartCasts/variables/kt7599.kt");
+                    doTest(fileName);
+                }
+
                 @TestMetadata("property.kt")
                 public void testProperty() throws Exception {
                     String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/smartCasts/variables/property.kt");
@@ -11739,6 +11745,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
             public static class Varnotnull extends AbstractJetDiagnosticsTest {
                 public void testAllFilesPresentInVarnotnull() throws Exception {
                     JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/diagnostics/tests/smartCasts/varnotnull"), Pattern.compile("^(.+)\\.kt$"), true);
+                }
+
+                @TestMetadata("assignNestedWhile.kt")
+                public void testAssignNestedWhile() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/smartCasts/varnotnull/assignNestedWhile.kt");
+                    doTest(fileName);
                 }
 
                 @TestMetadata("assignment.kt")
