@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.util.slicedMap;
 
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -43,6 +44,8 @@ public class BasicWritableSlice<K, V> implements WritableSlice<K, V> {
     private final RewritePolicy rewritePolicy;
     private final boolean isCollective;
 
+    private final Key<V> myKey = Key.create("BASIC_WRITABLE_SLICE_KEY");
+
     public BasicWritableSlice(RewritePolicy rewritePolicy) {
         this(rewritePolicy, false);
     }
@@ -50,6 +53,11 @@ public class BasicWritableSlice<K, V> implements WritableSlice<K, V> {
     public BasicWritableSlice(RewritePolicy rewritePolicy, boolean isCollective) {
         this.rewritePolicy = rewritePolicy;
         this.isCollective = isCollective;
+    }
+
+    @Override
+    public Key<V> getKey() {
+        return myKey;
     }
 
     @Override

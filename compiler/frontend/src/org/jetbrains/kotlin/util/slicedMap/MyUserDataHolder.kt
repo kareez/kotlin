@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-package org.jetbrains.kotlin.util.slicedMap;
+package org.jetbrains.kotlin.util.slicedMap
 
-import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Key
+import com.intellij.openapi.util.UserDataHolderBase
+import gnu.trove.TIntHashSet
+import java.util.*
 
-public interface ReadOnlySlice<K, V> {
-    Key<V> getKey();
-    SlicedMapKey<K, V> makeKey(K key);
+class MyUserDataHolder : UserDataHolderBase() {
+    val keyset = BitSet()
 
-    V computeValue(SlicedMap map, K key, V value, boolean valueNotFound);
+    override fun <T> putUserData(key: Key<T>, value: T?) {
+        val i = key.hashCode()
+        if (value != null) {
+            keyset.set(i)
+        }
+        else {
+            keyset.clear(i)
+        }
 
-    /**
-     * @return a slice that only retrieves the value from the storage and skips any computeValue() calls
-     */
-    ReadOnlySlice<K, V> makeRawValueVersion();
+        super.putUserData(key, value)
+    }
 }

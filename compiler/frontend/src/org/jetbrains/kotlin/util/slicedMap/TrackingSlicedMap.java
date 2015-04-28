@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.util.slicedMap;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.kotlin.utils.Printer;
@@ -31,7 +32,6 @@ public class TrackingSlicedMap extends SlicedMapImpl {
     private final boolean trackWithStackTraces;
 
     public TrackingSlicedMap(boolean trackWithStackTraces) {
-        super(Maps.<SlicedMapKey<?, ?>, Object>newLinkedHashMap());
         this.trackWithStackTraces = trackWithStackTraces;
     }
 
@@ -147,11 +147,18 @@ public class TrackingSlicedMap extends SlicedMapImpl {
 
         private final ReadOnlySlice<K, V> delegate;
 
+        private final Key<TrackableValue<V>> myKey = Key.create("SLICE_WITH_STACK_TRACE_KEY");
+
         private SliceWithStackTrace(@NotNull ReadOnlySlice<K, V> delegate) {
             this.delegate = delegate;
         }
 
         // Methods of ReadOnlySlice
+
+        @Override
+        public Key<TrackableValue<V>> getKey() {
+            return myKey;
+        }
 
         @Override
         public SlicedMapKey<K, TrackableValue<V>> makeKey(K key) {
