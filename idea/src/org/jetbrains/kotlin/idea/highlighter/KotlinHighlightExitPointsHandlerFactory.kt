@@ -86,7 +86,7 @@ private fun JetExpression.getRelevantFunction(): JetFunction? {
     for (parent in parents(false)) {
         when (parent) {
             is JetFunctionLiteral,
-            is JetNamedFunction -> if (!InlineUtil.isInlineLambda(parent as JetFunction, parent.analyze(), false)) return parent
+            is JetNamedFunction -> if (!InlineUtil.isInlinedArgument(parent as JetFunction, parent.analyze(), false)) return parent
         }
     }
     return null

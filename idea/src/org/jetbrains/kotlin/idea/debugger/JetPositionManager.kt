@@ -400,7 +400,7 @@ public class JetPositionManager(private val myDebugProcess: DebugProcess) : Mult
         }
 
         public fun isInlinedLambda(functionLiteral: JetFunction, context: BindingContext): Boolean {
-            return InlineUtil.isInlineLambda(functionLiteral, context, false)
+            return InlineUtil.isInlinedArgument(functionLiteral, context, false)
         }
 
         private fun createKeyForTypeMapper(file: JetFile) = PackagePartClassUtils.getPackagePartInternalName(file)
