@@ -27,10 +27,8 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.JetNodeTypes;
-import org.jetbrains.kotlin.lexer.JetModifierKeywordToken;
 import org.jetbrains.kotlin.lexer.JetTokens;
 import org.jetbrains.kotlin.name.FqName;
-import org.jetbrains.kotlin.psi.addRemoveModifier.AddRemoveModifierPackage;
 import org.jetbrains.kotlin.psi.stubs.KotlinClassStub;
 import org.jetbrains.kotlin.psi.stubs.elements.JetStubElementTypes;
 
@@ -134,13 +132,14 @@ public class JetClass extends JetTypeParameterListOwnerStub<KotlinClassStub> imp
         return body.getProperties();
     }
 
-    public boolean isTrait() {
+    public boolean isInterface() {
         KotlinClassStub stub = getStub();
         if (stub != null) {
-            return stub.isTrait();
+            return stub.isInterface();
         }
 
-        return findChildByType(JetTokens.TRAIT_KEYWORD) != null;
+        return findChildByType(JetTokens.TRAIT_KEYWORD) != null ||
+               findChildByType(JetTokens.INTERFACE_KEYWORD) != null;
     }
 
     public boolean isEnum() {
