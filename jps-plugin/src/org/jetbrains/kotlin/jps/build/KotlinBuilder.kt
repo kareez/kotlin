@@ -89,6 +89,8 @@ public class KotlinBuilder : ModuleLevelBuilder(BuilderCategory.SOURCE_PROCESSOR
             dirtyFilesHolder: DirtyFilesHolder<JavaSourceRootDescriptor, ModuleBuildTarget>,
             outputConsumer: ModuleLevelBuilder.OutputConsumer
     ): ModuleLevelBuilder.ExitCode {
+        KotlinBuilder::class.toString()
+
         val historyLabel = context.getBuilderParameter("history label")
         if (historyLabel != null) {
             LOG.info("Label in local history: $historyLabel")

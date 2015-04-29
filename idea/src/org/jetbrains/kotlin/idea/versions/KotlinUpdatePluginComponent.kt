@@ -38,6 +38,8 @@ private val INSTALLED_KOTLIN_VERSION = "installed.kotlin.plugin.version"
  */
 class KotlinUpdatePluginComponent : ApplicationComponent {
     override fun initComponent() {
+        KotlinUpdatePluginComponent::class.toString()
+
         if (ApplicationManager.getApplication()?.isUnitTestMode() == true) {
             return
         }
