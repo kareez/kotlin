@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createVariable.CreateL
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createVariable.CreateParameterActionFactory;
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.createVariable.CreateParameterByNamedArgumentActionFactory;
 import org.jetbrains.kotlin.idea.quickfix.replaceJavaClass.ReplaceJavaClassAsAnnotationArgumentFix;
+import org.jetbrains.kotlin.idea.quickfix.replaceJavaClass.ReplaceJavaClassAsAnnotationParameterFix;
 import org.jetbrains.kotlin.psi.JetClass;
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.ErrorsJvm;
 
@@ -215,8 +216,6 @@ public class QuickFixRegistrar {
 
         QuickFixes.factories.put(NOT_AN_ANNOTATION_CLASS, MakeClassAnAnnotationClassFix.createFactory());
 
-        QuickFixes.factories.put(DANGLING_FUNCTION_LITERAL_ARGUMENT_SUSPECTED, AddSemicolonAfterFunctionCallFix.createFactory());
-
         JetIntentionActionsFactory changeVariableTypeFix = ChangeVariableTypeFix.createFactoryForPropertyOrReturnTypeMismatchOnOverride();
         QuickFixes.factories.put(RETURN_TYPE_MISMATCH_ON_OVERRIDE, changeVariableTypeFix);
         QuickFixes.factories.put(PROPERTY_TYPE_MISMATCH_ON_OVERRIDE, changeVariableTypeFix);
@@ -308,9 +307,6 @@ public class QuickFixRegistrar {
         QuickFixes.factories.put(UNRESOLVED_REFERENCE, CreateClassFromReferenceExpressionActionFactory.INSTANCE$);
         QuickFixes.factories.put(UNRESOLVED_REFERENCE, CreateClassFromCallWithConstructorCalleeActionFactory.INSTANCE$);
 
-        QuickFixes.factories.put(INIT_KEYWORD_BEFORE_CLASS_INITIALIZER_EXPECTED, AddInitKeywordFix.Factory);
-        QuickFixes.factories.put(INIT_KEYWORD_BEFORE_CLASS_INITIALIZER_EXPECTED, AddInitKeywordFix.Factory.createWholeProjectFixFactory());
-
         QuickFixes.factories.put(PRIMARY_CONSTRUCTOR_DELEGATION_CALL_EXPECTED, InsertDelegationCallQuickfix.InsertThisDelegationCallFactory.INSTANCE$);
 
         QuickFixes.factories.put(EXPLICIT_DELEGATION_CALL_REQUIRED, InsertDelegationCallQuickfix.InsertThisDelegationCallFactory.INSTANCE$);
@@ -321,5 +317,8 @@ public class QuickFixRegistrar {
 
         QuickFixes.factories.put(ErrorsJvm.DEPRECATED_ANNOTATION_METHOD_CALL, MigrateAnnotationMethodCallFix.Companion);
         QuickFixes.factories.put(ErrorsJvm.DEPRECATED_ANNOTATION_METHOD_CALL, MigrateAnnotationMethodCallInWholeFile.Companion);
+
+        QuickFixes.factories.put(JAVA_LANG_CLASS_PARAMETER_IN_ANNOTATION, ReplaceJavaClassAsAnnotationParameterFix.Companion);
+        QuickFixes.factories.put(JAVA_LANG_CLASS_PARAMETER_IN_ANNOTATION, ReplaceJavaClassAsAnnotationParameterFix.Companion.createWholeProjectFixFactory());
     }
 }

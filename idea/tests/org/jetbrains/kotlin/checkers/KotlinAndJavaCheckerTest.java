@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.checkers;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.dataFlow.DataFlowInspection;
 import com.intellij.codeInspection.nullable.NullableStuffInspection;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.ArrayUtil;
@@ -26,7 +27,9 @@ import com.siyeh.ig.bugs.StaticCallOnSubclassInspection;
 import com.siyeh.ig.bugs.StaticFieldReferenceOnSubclassInspection;
 import kotlin.Function1;
 import kotlin.KotlinPackage;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.idea.KotlinDaemonAnalyzerTestCase;
+import org.jetbrains.kotlin.idea.test.ConfigLibraryUtil;
 import org.jetbrains.kotlin.idea.test.PluginTestCaseBase;
 import org.jetbrains.kotlin.test.InTextDirectivesUtils;
 import org.jetbrains.kotlin.utils.UtilsPackage;
@@ -55,28 +58,54 @@ public class KotlinAndJavaCheckerTest extends KotlinDaemonAnalyzerTestCase {
         throw new IllegalArgumentException("Can't find inspection tool with identifier: " + toolString);
     }
 
-    @Override
-    protected LocalInspectionTool[] configureLocalInspectionTools() {
+    @Nullable
+    protected String getConfigFileText() {
         File configureFile = new File(getTestDataPath(), getTestName(false) + ".txt");
-
-        if (!configureFile.exists()) return DEFAULT_TOOLS;
+        if (!configureFile.exists()) return null;
 
         try {
-            String configureText = FileUtil.loadFile(configureFile, true);
-
-            InTextDirectivesUtils.assertHasUnknownPrefixes(configureText, KotlinPackage.listOf("TOOL:"));
-            List<String> toolsStrings = InTextDirectivesUtils.findListWithPrefixes(configureText, "TOOL:");
-
-            return ArrayUtil.toObjectArray(KotlinPackage.map(toolsStrings, new Function1<String, LocalInspectionTool>() {
-                @Override
-                public LocalInspectionTool invoke(String toolString) {
-                    return mapStringToTool(toolString);
-                }
-            }), LocalInspectionTool.class);
+            return FileUtil.loadFile(configureFile, true);
         }
         catch (IOException e) {
             throw UtilsPackage.rethrow(e);
         }
+    }
+
+    @Override
+    protected LocalInspectionTool[] configureLocalInspectionTools() {
+        String configFileText = getConfigFileText();
+        if (configFileText == null) return DEFAULT_TOOLS;
+
+        List<String> toolsStrings = InTextDirectivesUtils.findListWithPrefixes(configFileText, "TOOL:");
+
+        return ArrayUtil.toObjectArray(KotlinPackage.map(toolsStrings, new Function1<String, LocalInspectionTool>() {
+            @Override
+            public LocalInspectionTool invoke(String toolString) {
+                return mapStringToTool(toolString);
+            }
+        }), LocalInspectionTool.class);
+    }
+
+    @Override
+    protected Module createMainModule() throws IOException {
+        Module module = super.createMainModule();
+
+        String configFileText = getConfigFileText();
+        if (configFileText != null && InTextDirectivesUtils.isDirectiveDefined(configFileText, "// WITH_RUNTIME")) {
+            ConfigLibraryUtil.configureKotlinRuntime(module);
+        }
+
+        return module;
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
     }
 
     @Override
@@ -89,47 +118,55 @@ public class KotlinAndJavaCheckerTest extends KotlinDaemonAnalyzerTestCase {
         return PluginTestCaseBase.getTestDataPathBase() + "/kotlinAndJavaChecker/";
     }
 
-    public void testName() throws Exception {
-        doTest(false, false, "ClassObjects.java", "ClassObjects.kt");
+    public void testClassObjects() throws Exception {
+        doTest();
     }
 
     public void testNoNotNullOnParameterInOverride() throws Exception {
-        doTest(true, true, "NoNotNullOnParameterInOverride.java", "NoNotNullOnParameterInOverride.kt");
+        doTest();
     }
 
     public void testTopLevelFunctionInDataFlowInspection() throws Exception {
-        doTest(true, true, "TopLevelFunctionInDataFlowInspection.java", "TopLevelFunctionInDataFlowInspection.kt");
+        doTest();
     }
 
     public void testUsingKotlinPackageDeclarations() throws Exception {
-        doTest(true, true, "UsingKotlinPackageDeclarations.java", "UsingKotlinPackageDeclarations.kt");
+        doTest();
     }
 
     public void testAssignKotlinClassToObjectInJava() throws Exception {
-        doTest(true, true, "AssignKotlinClassToObjectInJava.java", "AssignKotlinClassToObjectInJava.kt");
+        doTest();
     }
 
     public void testAssignMappedKotlinType() throws Exception {
-        doTest(true, true, "AssignMappedKotlinType.java", "AssignMappedKotlinType.kt");
+        doTest();
     }
 
     public void testUseKotlinSubclassesOfMappedTypes() throws Exception {
-        doTest(true, true, "UseKotlinSubclassesOfMappedTypes.java", "UseKotlinSubclassesOfMappedTypes.kt");
+        doTest();
     }
 
     public void testImplementedMethodsFromTraits() throws Exception {
-        doTest(true, true, "ImplementedMethodsFromTraits.java", "ImplementedMethodsFromTraits.kt");
+        doTest();
+    }
+
+    public void testJvmOverloadsFunctions() throws Exception {
+        doTest();
     }
 
     public void testEnumAutoGeneratedMethods() throws Exception {
-        doTest(true, true, "EnumAutoGeneratedMethods.java", "EnumAutoGeneratedMethods.kt");
+        doTest();
     }
 
     public void testEnumEntriesInSwitch() throws Exception {
-        doTest(true, true, "EnumEntriesInSwitch.java", "EnumEntriesInSwitch.kt");
+        doTest();
     }
 
     public void testEnumStaticImportInJava() throws Exception {
-        doTest(true, true, "EnumStaticImportInJava.java", "EnumStaticImportInJava.kt");
+        doTest();
+    }
+
+    public void doTest() throws Exception {
+        doTest(true, true, getTestName(false) + ".java", getTestName(false) + ".kt");
     }
 }

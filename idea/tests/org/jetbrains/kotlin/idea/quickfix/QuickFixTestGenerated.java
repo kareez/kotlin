@@ -2866,12 +2866,6 @@ public class QuickFixTestGenerated extends AbstractQuickFixTest {
             JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("idea/testData/quickfix/expressions"), Pattern.compile("^before(\\w+)\\.kt$"), true);
         }
 
-        @TestMetadata("beforeDanglingFunctionLiteralArgument.kt")
-        public void testDanglingFunctionLiteralArgument() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/expressions/beforeDanglingFunctionLiteralArgument.kt");
-            doTest(fileName);
-        }
-
         @TestMetadata("beforeRemoveUselessCast.kt")
         public void testRemoveUselessCast() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/expressions/beforeRemoveUselessCast.kt");
@@ -3079,6 +3073,45 @@ public class QuickFixTestGenerated extends AbstractQuickFixTest {
             }
         }
 
+        @TestMetadata("idea/testData/quickfix/migration/replaceJavaClassAsAnnotationParameter")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class ReplaceJavaClassAsAnnotationParameter extends AbstractQuickFixTest {
+            public void testAllFilesPresentInReplaceJavaClassAsAnnotationParameter() throws Exception {
+                JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("idea/testData/quickfix/migration/replaceJavaClassAsAnnotationParameter"), Pattern.compile("^before(\\w+)\\.kt$"), true);
+            }
+
+            @TestMetadata("beforeArrayRuntime.kt")
+            public void testArrayRuntime() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/migration/replaceJavaClassAsAnnotationParameter/beforeArrayRuntime.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("beforeBasicRuntime.kt")
+            public void testBasicRuntime() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/migration/replaceJavaClassAsAnnotationParameter/beforeBasicRuntime.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("beforeDefaultRuntime.kt")
+            public void testDefaultRuntime() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/migration/replaceJavaClassAsAnnotationParameter/beforeDefaultRuntime.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("beforeUsageWithErrorRuntime.kt")
+            public void testUsageWithErrorRuntime() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/migration/replaceJavaClassAsAnnotationParameter/beforeUsageWithErrorRuntime.kt");
+                doTest(fileName);
+            }
+
+            @TestMetadata("beforeVarargRuntime.kt")
+            public void testVarargRuntime() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/migration/replaceJavaClassAsAnnotationParameter/beforeVarargRuntime.kt");
+                doTest(fileName);
+            }
+        }
+
     }
 
     @TestMetadata("idea/testData/quickfix/modifiers")
@@ -3088,30 +3121,6 @@ public class QuickFixTestGenerated extends AbstractQuickFixTest {
         @TestMetadata("beforeAbstractModifierInEnum.kt")
         public void testAbstractModifierInEnum() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/modifiers/beforeAbstractModifierInEnum.kt");
-            doTest(fileName);
-        }
-
-        @TestMetadata("beforeAddInitKeyword.kt")
-        public void testAddInitKeyword() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/modifiers/beforeAddInitKeyword.kt");
-            doTest(fileName);
-        }
-
-        @TestMetadata("beforeAddInitKeywordRemoveSemicolon.kt")
-        public void testAddInitKeywordRemoveSemicolon() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/modifiers/beforeAddInitKeywordRemoveSemicolon.kt");
-            doTest(fileName);
-        }
-
-        @TestMetadata("beforeAddInitKeywordRemoveSemicolonSameLine.kt")
-        public void testAddInitKeywordRemoveSemicolonSameLine() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/modifiers/beforeAddInitKeywordRemoveSemicolonSameLine.kt");
-            doTest(fileName);
-        }
-
-        @TestMetadata("beforeAddInitKeywordWithModifiers.kt")
-        public void testAddInitKeywordWithModifiers() throws Exception {
-            String fileName = JetTestUtils.navigationMetadata("idea/testData/quickfix/modifiers/beforeAddInitKeywordWithModifiers.kt");
             doTest(fileName);
         }
 

@@ -32,7 +32,7 @@ fun main(args : Array<String>) {
     <!UNRESOLVED_REFERENCE!>a<!>.<!DEBUG_INFO_ELEMENT_WITH_ERROR_TYPE!>foo1<!>()(<!UNRESOLVED_REFERENCE!>a<!>)
 
     foo2()({})
-    foo2()<!TOO_MANY_ARGUMENTS, DANGLING_FUNCTION_LITERAL_ARGUMENT_SUSPECTED!>{}<!>
+    foo2()<!TOO_MANY_ARGUMENTS!>{}<!>
     (foo2()){}
     (foo2()){<!EXPECTED_PARAMETERS_NUMBER_MISMATCH, CANNOT_INFER_PARAMETER_TYPE!>x<!> -> }
     foo2()({<!EXPECTED_PARAMETERS_NUMBER_MISMATCH, CANNOT_INFER_PARAMETER_TYPE!>x<!> -> })
@@ -56,7 +56,7 @@ fun main1() {
     {1}();
     (fun (x : Int) = x)(1)
     1.(fun Int.(x : Int) = x)(1);
-    @l{1}()
+    l@{1}()
     1.((fun Int.() = 1))()
     1.(f())()
     1.if(true){f()}else{f()}()

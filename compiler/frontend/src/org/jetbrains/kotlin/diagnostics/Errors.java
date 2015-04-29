@@ -123,6 +123,7 @@ public interface Errors {
     DiagnosticFactory0<PsiElement> ANNOTATION_CLASS_WITH_BODY = DiagnosticFactory0.create(ERROR);
     DiagnosticFactory0<JetTypeReference> INVALID_TYPE_OF_ANNOTATION_MEMBER = DiagnosticFactory0.create(ERROR);
     DiagnosticFactory0<JetTypeReference> NULLABLE_TYPE_OF_ANNOTATION_MEMBER = DiagnosticFactory0.create(ERROR);
+    DiagnosticFactory0<JetTypeReference> JAVA_LANG_CLASS_PARAMETER_IN_ANNOTATION = DiagnosticFactory0.create(WARNING);
     DiagnosticFactory0<JetModifierListOwner> ILLEGAL_ANNOTATION_KEYWORD = DiagnosticFactory0
             .create(ERROR, modifierSetPosition(JetTokens.ANNOTATION_KEYWORD));
     DiagnosticFactory0<JetExpression> ANNOTATION_PARAMETER_MUST_BE_CONST = DiagnosticFactory0.create(ERROR);
@@ -161,7 +162,6 @@ public interface Errors {
 
     DiagnosticFactory0<JetSecondaryConstructor> SECONDARY_CONSTRUCTOR_IN_OBJECT = DiagnosticFactory0.create(ERROR);
     DiagnosticFactory0<JetDelegatorToSuperCall> SUPERTYPE_INITIALIZED_WITHOUT_PRIMARY_CONSTRUCTOR = DiagnosticFactory0.create(ERROR);
-    DiagnosticFactory0<PsiElement> INIT_KEYWORD_BEFORE_CLASS_INITIALIZER_EXPECTED = DiagnosticFactory0.create(WARNING);
 
     DiagnosticFactory0<JetConstructorDelegationCall> PRIMARY_CONSTRUCTOR_DELEGATION_CALL_EXPECTED =
             DiagnosticFactory0.create(ERROR, PositioningStrategies.SECONDARY_CONSTRUCTOR_DELEGATION_CALL);
@@ -419,8 +419,6 @@ public interface Errors {
     DiagnosticFactory1<PsiElement, Collection<? extends ResolvedCall<?>>> NONE_APPLICABLE = DiagnosticFactory1.create(ERROR);
     DiagnosticFactory1<PsiElement, Collection<? extends ResolvedCall<?>>> CANNOT_COMPLETE_RESOLVE = DiagnosticFactory1.create(ERROR);
     DiagnosticFactory1<PsiElement, Collection<? extends ResolvedCall<?>>> UNRESOLVED_REFERENCE_WRONG_RECEIVER = DiagnosticFactory1.create(ERROR);
-
-    DiagnosticFactory0<JetExpression> DANGLING_FUNCTION_LITERAL_ARGUMENT_SUSPECTED = DiagnosticFactory0.create(WARNING);
 
     DiagnosticFactory1<PsiElement, TypeParameterDescriptor> TYPE_PARAMETER_AS_REIFIED = DiagnosticFactory1.create(ERROR);
     DiagnosticFactory1<PsiElement, JetType> REIFIED_TYPE_FORBIDDEN_SUBSTITUTION = DiagnosticFactory1.create(ERROR);

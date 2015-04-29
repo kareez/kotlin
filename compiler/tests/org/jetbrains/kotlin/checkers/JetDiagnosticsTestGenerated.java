@@ -681,6 +681,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 doTest(fileName);
             }
 
+            @TestMetadata("deprecatedJavaLangClass.kt")
+            public void testDeprecatedJavaLangClass() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/annotations/deprecatedJavaLangClass.kt");
+                doTest(fileName);
+            }
+
             @TestMetadata("invalidTypesInAnnotationConstructor.kt")
             public void testInvalidTypesInAnnotationConstructor() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/annotations/invalidTypesInAnnotationConstructor.kt");
@@ -3510,6 +3516,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 doTest(fileName);
             }
 
+            @TestMetadata("genericConstructorUsage.kt")
+            public void testGenericConstructorUsage() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/deprecated/genericConstructorUsage.kt");
+                doTest(fileName);
+            }
+
             @TestMetadata("imports.kt")
             public void testImports() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/deprecated/imports.kt");
@@ -4701,12 +4713,6 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 doTest(fileName);
             }
 
-            @TestMetadata("DanglingFunctionLiteral.kt")
-            public void testDanglingFunctionLiteral() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/functionLiterals/DanglingFunctionLiteral.kt");
-                doTest(fileName);
-            }
-
             @TestMetadata("DeprecatedSyntax.kt")
             public void testDeprecatedSyntax() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/functionLiterals/DeprecatedSyntax.kt");
@@ -4764,12 +4770,6 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
             @TestMetadata("LabeledFunctionLiterals.kt")
             public void testLabeledFunctionLiterals() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/functionLiterals/LabeledFunctionLiterals.kt");
-                doTest(fileName);
-            }
-
-            @TestMetadata("NoDanglingFunctionLiteralForNestedCalls.kt")
-            public void testNoDanglingFunctionLiteralForNestedCalls() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/functionLiterals/NoDanglingFunctionLiteralForNestedCalls.kt");
                 doTest(fileName);
             }
 
@@ -10575,12 +10575,6 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
             @TestMetadata("errorsOnEmptyDelegationCall.kt")
             public void testErrorsOnEmptyDelegationCall() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/secondaryConstructors/errorsOnEmptyDelegationCall.kt");
-                doTest(fileName);
-            }
-
-            @TestMetadata("expectedInitKeywordOnInitializer.kt")
-            public void testExpectedInitKeywordOnInitializer() throws Exception {
-                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/secondaryConstructors/expectedInitKeywordOnInitializer.kt");
                 doTest(fileName);
             }
 
