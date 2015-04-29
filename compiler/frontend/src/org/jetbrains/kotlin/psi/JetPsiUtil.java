@@ -551,6 +551,8 @@ public class JetPsiUtil {
             return true;
         }
 
+        if (parentExpression instanceof JetLabeledExpression) return false;
+
         int innerPriority = getPriority(innerExpression);
         int parentPriority = getPriority(parentExpression);
 
