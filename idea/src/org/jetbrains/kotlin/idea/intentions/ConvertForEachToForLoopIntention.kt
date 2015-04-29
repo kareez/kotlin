@@ -69,9 +69,6 @@ public class ConvertForEachToForLoopIntention : JetSelfTargetingOffsetIndependen
         val loopRange = JetPsiUtil.safeDeparenthesize(receiver)
         val body = functionLiteral.getBodyExpression()!!
         val parameter = functionLiteral.getValueParameters().singleOrNull()
-        return if (parameter != null)
-            factory.createExpressionByPattern("for($0 in $1){ $2 }", parameter, loopRange, body)
-        else
-            factory.createExpressionByPattern("for(it in $0){ $1 }", loopRange, body)
+        return factory.createExpressionByPattern("for($0 in $1){ $2 }", parameter ?: "it", loopRange, body)
     }
 }

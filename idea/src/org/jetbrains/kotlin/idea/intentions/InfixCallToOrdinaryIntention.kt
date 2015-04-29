@@ -32,7 +32,7 @@ public class InfixCallToOrdinaryIntention : JetSelfTargetingIntention<JetBinaryE
             is JetFunctionLiteralExpression -> " $2={}$"
             else -> "($2)"
         }
-        val replacement = JetPsiFactory(element).createExpressionByPattern(pattern, element.getLeft()!!, element.getOperationReference(), argument)
+        val replacement = JetPsiFactory(element).createExpressionByPattern(pattern, element.getLeft()!!, element.getOperationReference().getText(), argument)
         element.replace(replacement)
     }
 }

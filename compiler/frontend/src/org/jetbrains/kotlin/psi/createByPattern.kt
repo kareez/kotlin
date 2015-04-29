@@ -24,14 +24,10 @@ import com.intellij.psi.codeStyle.CodeStyleManager
 import org.jetbrains.kotlin.psi.psiUtil.parents
 import java.util.*
 
-public fun JetPsiFactory.createExpressionByPattern(pattern: String, vararg args: PsiElement): JetExpression {
-    val data = processPattern(pattern)
+public fun JetPsiFactory.createExpressionByPattern(pattern: String, vararg args: Any): JetExpression {
+    val (processedText, allPlaceholders) = processPattern(pattern, args)
 
-    if (args.size() != data.ranges.size()) {
-        throw IllegalArgumentException("Wrong number of arguments, expected: ${data.ranges.size()}, passed: ${args.size()}")
-    }
-
-    var expression = createExpression(data.processedText)
+    var expression = createExpression(processedText)
     val project = expression.getProject()
 
     val start = expression.getTextRange().getStartOffset()
@@ -39,7 +35,7 @@ public fun JetPsiFactory.createExpressionByPattern(pattern: String, vararg args:
     val pointerManager = SmartPointerManager.getInstance(project)
 
     val pointers = HashMap<SmartPsiElementPointer<PsiElement>, Int>()
-    for ((n, placeholders) in data.ranges) {
+    for ((n, placeholders) in allPlaceholders) {
         for ((range, text) in placeholders) {
             val token = expression.findElementAt(range.getStartOffset())!!
             for (element in token.parents()) {
@@ -63,16 +59,21 @@ public fun JetPsiFactory.createExpressionByPattern(pattern: String, vararg args:
 
     for ((pointer, n) in pointers) {
         val element = pointer.getElement()!!
-        element.replace(args[n])
+        val arg = args[n]
+        if (arg !is PsiElement) {
+            throw IllegalArgumentException("Unknown argument $arg - should be PsiElement or String")
+        }
+        element.replace(arg)
     }
 
     return expression
 }
 
 private data class Placeholder(val range: TextRange, val text: String)
-private data class PatternData(val processedText: String, val ranges: Map<Int, List<Placeholder>>)
 
-private fun processPattern(pattern: String): PatternData {
+private data class PatternData(val processedText: String, val placeholders: Map<Int, List<Placeholder>>)
+
+private fun processPattern(pattern: String, args: Array<out Any>): PatternData {
     val ranges = LinkedHashMap<Int, MutableList<Placeholder>>()
 
     fun charOrNull(i: Int) = if (i < pattern.length()) pattern[i] else null
@@ -101,6 +102,15 @@ private fun processPattern(pattern: String): PatternData {
                     check(n >= 0, "invalid placeholder number: $n")
                     i = lastIndex
 
+                    val placeholders = ranges.getOrPut(n, { ArrayList() })
+
+                    val arg: Any? = if (n < args.size()) args[n] else null /* report wrong number of arguments later */
+                    if (arg is String) { // no placeholder needed
+                        check(charOrNull(i) != '=', "do not specify placeholder text for $$n - String argument passed")
+                        append(arg)
+                        continue
+                    }
+
                     val placeholderText = if (charOrNull(i) != '=') {
                         "xxx"
                     }
@@ -116,7 +126,7 @@ private fun processPattern(pattern: String): PatternData {
 
                     append(placeholderText)
                     val range = TextRange(length() - placeholderText.length(), length())
-                    ranges.getOrPut(n, { ArrayList() }).add(Placeholder(range, placeholderText))
+                    placeholders.add(Placeholder(range, placeholderText))
                     continue
                 }
             }
@@ -132,6 +142,10 @@ private fun processPattern(pattern: String): PatternData {
     val max = ranges.keySet().max()!!
     for (i in 0..max) {
         check(ranges.contains(i), "no '$$i' placeholder")
+    }
+
+    if (args.size() != ranges.size()) {
+        throw IllegalArgumentException("Wrong number of arguments, expected: ${ranges.size()}, passed: ${args.size()}")
     }
 
     return PatternData(text, ranges)
