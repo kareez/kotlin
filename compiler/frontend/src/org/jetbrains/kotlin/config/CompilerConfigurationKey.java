@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class CompilerConfigurationKey<T> {
     Key<T> ideaKey;
 
-    private CompilerConfigurationKey(@NotNull @NonNls String name) {
+    protected CompilerConfigurationKey(@NotNull @NonNls String name) {
         ideaKey = Key.create(name);
     }
 

@@ -120,7 +120,7 @@ public class KotlinCoreEnvironment private(
         val index = JvmDependenciesIndex(javaRoots)
         (fileManager as KotlinCliJavaFileManagerImpl).initIndex(index)
 
-        for (path in configuration.getList(JVMConfigurationKeys.ANNOTATIONS_PATH_KEY)) {
+        for (path in configuration.getSink(JVMConfigurationKeys.ANNOTATIONS_PATH_KEY)) {
             addExternalAnnotationsRoot(path)
         }
         sourceFiles.addAll(CompileEnvironmentUtil.getJetFiles(project, getSourceRootsCheckingForDuplicates(), {
@@ -133,14 +133,14 @@ public class KotlinCoreEnvironment private(
             }
         })
 
-        JetScriptDefinitionProvider.getInstance(project).addScriptDefinitions(configuration.getList(CommonConfigurationKeys.SCRIPT_DEFINITIONS_KEY))
+        JetScriptDefinitionProvider.getInstance(project).addScriptDefinitions(configuration.getSink(CommonConfigurationKeys.SCRIPT_DEFINITIONS_KEY))
 
         project.registerService(javaClass<VirtualFileFinderFactory>(), CliVirtualFileFinderFactory(index))
 
         ExternalDeclarationsProvider.registerExtensionPoint(project)
         ExpressionCodegenExtension.registerExtensionPoint(project)
 
-        for (registrar in configuration.getList(ComponentRegistrar.PLUGIN_COMPONENT_REGISTRARS)) {
+        for (registrar in configuration.getSink(ComponentRegistrar.PLUGIN_COMPONENT_REGISTRARS)) {
             registrar.registerProjectComponents(project, configuration)
         }
     }
@@ -163,7 +163,7 @@ public class KotlinCoreEnvironment private(
     }
 
     private fun fillClasspath(configuration: CompilerConfiguration) {
-        for (root in configuration.getList(CommonConfigurationKeys.CONTENT_ROOTS)) {
+        for (root in configuration.getSink(CommonConfigurationKeys.CONTENT_ROOTS)) {
             val javaRoot = root as? JvmContentRoot ?: continue
             val virtualFile = contentRootToVirtualFile(javaRoot) ?: continue
 
@@ -212,7 +212,7 @@ public class KotlinCoreEnvironment private(
     private fun getSourceRootsCheckingForDuplicates(): Collection<String> {
         val uniqueSourceRoots = Sets.newLinkedHashSet<String>()
 
-        configuration.getList(CommonConfigurationKeys.CONTENT_ROOTS).filterIsInstance<KotlinSourceRoot>().forEach { sourceRoot ->
+        configuration.getSink(CommonConfigurationKeys.CONTENT_ROOTS).filterIsInstance<KotlinSourceRoot>().forEach { sourceRoot ->
             val path = sourceRoot.path
             if (!uniqueSourceRoots.add(path)) {
                 report(WARNING, "Duplicate source root: $path")

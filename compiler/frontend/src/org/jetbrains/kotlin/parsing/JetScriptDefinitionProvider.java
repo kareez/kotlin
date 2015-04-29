@@ -67,7 +67,7 @@ public class JetScriptDefinitionProvider {
         scripts.put(scriptDefinition.getExtension(), scriptDefinition);
     }
 
-    public void addScriptDefinitions(List<JetScriptDefinition> definitions) {
+    public void addScriptDefinitions(Collection<JetScriptDefinition> definitions) {
         for (JetScriptDefinition definition : definitions) {
             addScriptDefinition(definition);
         }

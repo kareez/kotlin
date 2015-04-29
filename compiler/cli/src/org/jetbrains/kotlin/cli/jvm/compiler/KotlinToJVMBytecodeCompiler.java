@@ -170,15 +170,21 @@ public class KotlinToJVMBytecodeCompiler {
 
         for (Module module : chunk) {
             addKotlinSourceRoots(configuration, getAbsolutePaths(directory, module));
+        }
 
+        for (Module module : chunk) {
             for (String javaSourceRoot : module.getJavaSourceRoots()) {
                 addJavaSourceRoot(configuration, new File(javaSourceRoot));
             }
+        }
 
+        for (Module module : chunk) {
             for (String classpathRoot : module.getClasspathRoots()) {
                 addJvmClasspathRoot(configuration, new File(classpathRoot));
             }
+        }
 
+        for (Module module : chunk) {
             for (String annotationsRoot : module.getAnnotationsRoots()) {
                 configuration.add(JVMConfigurationKeys.ANNOTATIONS_PATH_KEY, new File(annotationsRoot));
             }
@@ -255,7 +261,7 @@ public class KotlinToJVMBytecodeCompiler {
             @NotNull KotlinPaths paths,
             @NotNull KotlinCoreEnvironment environment
     ) {
-        List<AnalyzerScriptParameter> scriptParameters = environment.getConfiguration().getList(JVMConfigurationKeys.SCRIPT_PARAMETERS);
+        Collection<AnalyzerScriptParameter> scriptParameters = environment.getConfiguration().getSink(JVMConfigurationKeys.SCRIPT_PARAMETERS);
         if (!scriptParameters.isEmpty()) {
             JetScriptDefinitionProvider.getInstance(environment.getProject()).addScriptDefinition(
                     new JetScriptDefinition(".kts", scriptParameters)
@@ -331,7 +337,7 @@ public class KotlinToJVMBytecodeCompiler {
 
         CompilerPluginContext context = new CompilerPluginContext(environment.getProject(), result.getBindingContext(),
                                                                   environment.getSourceFiles());
-        for (CompilerPlugin plugin : environment.getConfiguration().getList(CLIConfigurationKeys.COMPILER_PLUGINS)) {
+        for (CompilerPlugin plugin : environment.getConfiguration().getSink(CLIConfigurationKeys.COMPILER_PLUGINS)) {
             plugin.processFiles(context);
         }
 

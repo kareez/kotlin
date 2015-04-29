@@ -468,7 +468,7 @@ public class JetTestUtils {
     }
 
     public static void resolveAllKotlinFiles(KotlinCoreEnvironment environment) throws IOException {
-        List<ContentRoot> paths = environment.getConfiguration().get(CommonConfigurationKeys.CONTENT_ROOTS);
+        Set<ContentRoot> paths = environment.getConfiguration().get(CommonConfigurationKeys.CONTENT_ROOTS);
         if (paths == null) return;
         List<JetFile> jetFiles = Lists.newArrayList();
         for (ContentRoot root : paths) {

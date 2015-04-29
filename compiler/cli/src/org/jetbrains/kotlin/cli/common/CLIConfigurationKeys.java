@@ -18,14 +18,13 @@ package org.jetbrains.kotlin.cli.common;
 
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector;
 import org.jetbrains.kotlin.config.CompilerConfigurationKey;
-
-import java.util.List;
+import org.jetbrains.kotlin.config.CompilerConfigurationSinkKey;
 
 public class CLIConfigurationKeys {
     public static final CompilerConfigurationKey<MessageCollector> MESSAGE_COLLECTOR_KEY =
             CompilerConfigurationKey.create("message collector");
-    public static final CompilerConfigurationKey<List<CompilerPlugin>> COMPILER_PLUGINS =
-            CompilerConfigurationKey.create("compiler plugins");
+    public static final CompilerConfigurationSinkKey.ListKey<CompilerPlugin> COMPILER_PLUGINS =
+            CompilerConfigurationSinkKey.createList("compiler plugins");
 
     private CLIConfigurationKeys() {
     }

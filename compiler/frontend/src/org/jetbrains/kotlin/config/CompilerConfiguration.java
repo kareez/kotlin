@@ -40,13 +40,13 @@ public class CompilerConfiguration {
     }
 
     @NotNull
-    public <T> List<T> getList(@NotNull CompilerConfigurationKey<List<T>> key) {
-        List<T> data = (List<T>) map.get(key.ideaKey);
+    public <S extends Collection<T>, T> Collection<T> getSink(@NotNull CompilerConfigurationSinkKey<S, T> key) {
+        Collection<T> data = (Collection<T>) map.get(key.ideaKey);
         if (data == null) {
             return Collections.emptyList();
         }
         else {
-            return Collections.unmodifiableList(data);
+            return Collections.unmodifiableCollection(data);
         }
     }
 
@@ -55,31 +55,31 @@ public class CompilerConfiguration {
         map.put(key.ideaKey, value);
     }
 
-    public <T> void add(@NotNull CompilerConfigurationKey<List<T>> key, @NotNull T value) {
+    public <S extends Collection<T>, T> void add(@NotNull CompilerConfigurationSinkKey<S, T> key, @NotNull T value) {
         checkReadOnly();
-        Key<List<T>> ideaKey = key.ideaKey;
-        if (map.get(ideaKey) == null) {
-            map.put(ideaKey, new ArrayList<T>());
-        }
-        List<T> list = (List<T>) map.get(ideaKey);
-        list.add(value);
+        S sink = initSink(key);
+        key.add(sink, value);
     }
 
-    public <T> void addAll(@NotNull CompilerConfigurationKey<List<T>> key, @NotNull Collection<T> values) {
+    public <S extends Collection<T>, T> void addAll(@NotNull CompilerConfigurationSinkKey<S, T> key, @NotNull Collection<T> values) {
         checkReadOnly();
         checkForNullElements(values);
-        Key<List<T>> ideaKey = key.ideaKey;
-        if (map.get(ideaKey) == null) {
-            map.put(ideaKey, new ArrayList<T>());
-        }
-        List<T> list = (List<T>) map.get(ideaKey);
-        list.addAll(values);
+        S sink = initSink(key);
+        key.addAll(sink, values);
     }
 
     public CompilerConfiguration copy() {
         CompilerConfiguration copy = new CompilerConfiguration();
         copy.map.putAll(map);
         return copy;
+    }
+
+    private <S extends Collection<T>, T> S initSink(@NotNull CompilerConfigurationSinkKey<S, T> key) {
+        Key<S> ideaKey = key.ideaKey;
+        if (map.get(ideaKey) == null) {
+            map.put(ideaKey, key.createSink());
+        }
+        return (S) map.get(ideaKey);
     }
 
     private void checkReadOnly() {

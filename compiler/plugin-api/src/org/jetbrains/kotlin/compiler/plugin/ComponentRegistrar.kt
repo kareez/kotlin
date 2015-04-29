@@ -17,12 +17,13 @@
 package org.jetbrains.kotlin.compiler.plugin
 
 import com.intellij.mock.MockProject
-import org.jetbrains.kotlin.config.CompilerConfigurationKey
 import org.jetbrains.kotlin.config.CompilerConfiguration
+import org.jetbrains.kotlin.config.CompilerConfigurationSinkKey
 
 public trait ComponentRegistrar {
     companion object {
-        public val PLUGIN_COMPONENT_REGISTRARS: CompilerConfigurationKey<MutableList<ComponentRegistrar>> = CompilerConfigurationKey.create("plugin component registrars")
+        public val PLUGIN_COMPONENT_REGISTRARS: CompilerConfigurationSinkKey.ListKey<ComponentRegistrar> =
+                CompilerConfigurationSinkKey.createList("plugin component registrars")
     }
 
     public fun registerProjectComponents(project: MockProject, configuration: CompilerConfiguration)

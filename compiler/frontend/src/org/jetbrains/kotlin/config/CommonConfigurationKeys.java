@@ -18,14 +18,14 @@ package org.jetbrains.kotlin.config;
 
 import org.jetbrains.kotlin.parsing.JetScriptDefinition;
 
-import java.util.List;
-
 public class CommonConfigurationKeys {
     private CommonConfigurationKeys() {
     }
 
     // roots, including dependencies and own source
-    public static final CompilerConfigurationKey<List<ContentRoot>> CONTENT_ROOTS = CompilerConfigurationKey.create("content roots");
+    public static final CompilerConfigurationSinkKey.LinkedSetKey<ContentRoot> CONTENT_ROOTS =
+            CompilerConfigurationSinkKey.createLinkedSet("content roots");
 
-    public static final CompilerConfigurationKey<List<JetScriptDefinition>> SCRIPT_DEFINITIONS_KEY = CompilerConfigurationKey.create("script definitions");
+    public static final CompilerConfigurationSinkKey.ListKey<JetScriptDefinition> SCRIPT_DEFINITIONS_KEY =
+            CompilerConfigurationSinkKey.createList("script definitions");
 }

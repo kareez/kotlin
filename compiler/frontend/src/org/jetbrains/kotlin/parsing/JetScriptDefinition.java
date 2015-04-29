@@ -19,16 +19,13 @@ package org.jetbrains.kotlin.parsing;
 import org.jetbrains.kotlin.resolve.AnalyzerScriptParameter;
 import org.jetbrains.kotlin.resolve.ImportPath;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class JetScriptDefinition {
     private final String extension;
-    private final List<AnalyzerScriptParameter> parameters;
+    private final Collection<AnalyzerScriptParameter> parameters;
 
-    public JetScriptDefinition(String extension, List<AnalyzerScriptParameter> scriptParameters) {
+    public JetScriptDefinition(String extension, Collection<AnalyzerScriptParameter> scriptParameters) {
         this.extension = extension;
         parameters = scriptParameters == null ? Collections.<AnalyzerScriptParameter>emptyList() : scriptParameters;
     }
@@ -45,7 +42,7 @@ public class JetScriptDefinition {
         this(extension, Arrays.asList(scriptParameters));
     }
 
-    public List<AnalyzerScriptParameter> getScriptParameters() {
+    public Collection<AnalyzerScriptParameter> getScriptParameters() {
         return parameters;
     }
 
