@@ -542,3 +542,16 @@ public fun PsiFile.getFqNameByDirectory(): FqName {
 }
 
 public fun JetFile.packageMatchesDirectory(): Boolean = getPackageFqName() == getFqNameByDirectory()
+
+public fun JetElement.collectAnnotationEntries(): List<JetAnnotationEntry> {
+    val result = arrayListOf<JetAnnotationEntry>()
+
+    for (child in getChildren()) {
+        when (child) {
+            is JetAnnotationEntry -> result.add(child)
+            is JetAnnotation -> result.addAll(child.getEntries())
+        }
+    }
+
+    return result
+}

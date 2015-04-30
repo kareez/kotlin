@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import kotlin.Function1;
 import kotlin.KotlinPackage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.psi.psiUtil.PsiUtilPackage;
 import org.jetbrains.kotlin.psi.stubs.KotlinPlaceHolderStub;
 import org.jetbrains.kotlin.psi.stubs.elements.JetStubElementTypes;
 
@@ -47,11 +48,6 @@ public class JetFileAnnotationList extends JetElementImplStub<KotlinPlaceHolderS
 
     @NotNull
     public List<JetAnnotationEntry> getAnnotationEntries() {
-        return KotlinPackage.flatMap(getAnnotations(), new Function1<JetAnnotation, List<JetAnnotationEntry>>() {
-            @Override
-            public List<JetAnnotationEntry> invoke(JetAnnotation annotation) {
-                return annotation.getEntries();
-            }
-        });
+        return PsiUtilPackage.collectAnnotationEntries(this);
     }
 }

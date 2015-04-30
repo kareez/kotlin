@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.lexer.JetModifierKeywordToken;
 import org.jetbrains.kotlin.lexer.JetToken;
+import org.jetbrains.kotlin.psi.psiUtil.PsiUtilPackage;
 import org.jetbrains.kotlin.psi.stubs.KotlinModifierListStub;
 import org.jetbrains.kotlin.psi.stubs.elements.JetStubElementTypes;
 
@@ -53,13 +54,7 @@ public abstract class JetModifierList extends JetElementImplStub<KotlinModifierL
 
     @NotNull
     public List<JetAnnotationEntry> getAnnotationEntries() {
-        List<JetAnnotationEntry> entries = getStubOrPsiChildrenAsList(JetStubElementTypes.ANNOTATION_ENTRY);
-        List<JetAnnotationEntry> answer = entries.isEmpty() ? null : Lists.newArrayList(entries);
-        for (JetAnnotation annotation : getAnnotations()) {
-            if (answer == null) answer = new ArrayList<JetAnnotationEntry>();
-            answer.addAll(annotation.getEntries());
-        }
-        return answer != null ? answer : Collections.<JetAnnotationEntry>emptyList();
+        return PsiUtilPackage.collectAnnotationEntries(this);
     }
 
     public boolean hasModifier(@NotNull JetModifierKeywordToken token) {
