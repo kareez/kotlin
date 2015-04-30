@@ -17,12 +17,10 @@
 package org.jetbrains.kotlin.serialization.js
 
 import com.google.protobuf.ByteString
-import org.jetbrains.kotlin.builtins.BuiltInsSerializationUtil
-import org.jetbrains.kotlin.builtins.createBuiltInPackageFragmentProvider
-import org.jetbrains.kotlin.descriptors.ClassDescriptor
-import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
-import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.descriptors.PackageFragmentProvider
+import com.google.protobuf.ExtensionRegistryLite
+import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.load.kotlin.PackageClassUtils
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.descriptorUtil.classId
@@ -30,7 +28,7 @@ import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
 import org.jetbrains.kotlin.serialization.DescriptorSerializer
 import org.jetbrains.kotlin.serialization.ProtoBuf
 import org.jetbrains.kotlin.serialization.SerializationUtil
-import org.jetbrains.kotlin.serialization.builtins.BuiltInsSerializerExtension
+import org.jetbrains.kotlin.serialization.StringTable
 import org.jetbrains.kotlin.serialization.deserialization.FlexibleTypeCapabilitiesDeserializer
 import org.jetbrains.kotlin.storage.StorageManager
 import org.jetbrains.kotlin.utils.KotlinJavascriptMetadataUtils
@@ -41,28 +39,58 @@ import java.util.zip.GZIPOutputStream
 import kotlin.platform.platformStatic
 
 public object KotlinJavascriptSerializationUtil {
-    private val PACKAGE_FILE_EXT = ".kotlin_package"
+    public val EXTENSION_REGISTRY: ExtensionRegistryLite
+
+    init {
+        EXTENSION_REGISTRY = ExtensionRegistryLite.newInstance()
+        JsProtoBuf.registerAllExtensions(EXTENSION_REGISTRY)
+    }
+
+    private val CLASS_METADATA_FILE_EXTENSION: String = "kjsm"
+
+    private val PACKAGE_DEFAULT_BYTES = run {
+        val stream = ByteArrayOutputStream()
+        ProtoBuf.Package.getDefaultInstance().writeTo(stream)
+        stream.toByteArray()
+    }
+
+    private val CLASSES_IN_PACKAGE_DEFAULT_BYTES = run {
+        val stream = ByteArrayOutputStream()
+        JsProtoBuf.Classes.getDefaultInstance().writeTo(stream)
+        stream.toByteArray()
+    }
+
+    private val STRING_TABLE_DEFAULT_BYTES = run {
+        val nameStream = ByteArrayOutputStream()
+        val strings = StringTable(KotlinJavascriptSerializerExtension)
+        SerializationUtil.serializeStringTable(nameStream, strings.serializeSimpleNames(), strings.serializeQualifiedNames())
+        nameStream.toByteArray()
+    }
 
     platformStatic
     public fun createPackageFragmentProvider(moduleDescriptor: ModuleDescriptor, metadata: ByteArray, storageManager: StorageManager): PackageFragmentProvider? {
-        val gzipInputStream = GZIPInputStream(ByteArrayInputStream(metadata))
-        val content = JsProtoBuf.Library.parseFrom(gzipInputStream)
-        gzipInputStream.close()
-
-        val contentMap: MutableMap<String, ByteArray> = hashMapOf()
-        for (index in content.getEntryCount().indices) {
-            val entry = content.getEntry(index)
-            contentMap[entry.getPath()] = entry.getContent().toByteArray()
-        }
+        val contentMap = metadata.toContentMap()
 
         val packageFqNames = getPackages(contentMap).map { FqName(it) }.toSet()
         if (packageFqNames.isEmpty()) return null
 
-        return createBuiltInPackageFragmentProvider(
+        return createKotlinJavascriptPackageFragmentProvider(
                 storageManager, moduleDescriptor, packageFqNames, FlexibleTypeCapabilitiesDeserializer.Dynamic
         ) {
             path ->
-            if (!contentMap.containsKey(path)) null else ByteArrayInputStream(contentMap.get(path))
+                if (!contentMap.containsKey(path)) {
+                    when {
+                        isPackageMetadataFile(path) ->
+                            ByteArrayInputStream(PACKAGE_DEFAULT_BYTES)
+                        isStringTableFile(path) ->
+                            ByteArrayInputStream(STRING_TABLE_DEFAULT_BYTES)
+                        isClassesInPackageFile(path) ->
+                            ByteArrayInputStream(CLASSES_IN_PACKAGE_DEFAULT_BYTES)
+                        else ->
+                            null
+                    }
+                }
+                else ByteArrayInputStream(contentMap.get(path))
         }
     }
 
@@ -101,7 +129,7 @@ public object KotlinJavascriptSerializationUtil {
 
         val skip: (DeclarationDescriptor) -> Boolean = { DescriptorUtils.getContainingModule(it) != module }
 
-        val serializer = DescriptorSerializer.createTopLevel(BuiltInsSerializerExtension)
+        val serializer = DescriptorSerializer.createTopLevel(KotlinJavascriptSerializerExtension)
 
         val classifierDescriptors = DescriptorSerializer.sort(packageView.getMemberScope().getDescriptors(DescriptorKindFilter.CLASSIFIERS))
 
@@ -116,23 +144,118 @@ public object KotlinJavascriptSerializationUtil {
         val packageStream = ByteArrayOutputStream()
         val fragments = module.getPackageFragmentProvider().getPackageFragments(fqName)
         val packageProto = serializer.packageProto(fragments, skip).build() ?: error("Package fragments not serialized: $fragments")
-        packageProto.writeTo(packageStream)
-        writeFun(BuiltInsSerializationUtil.getPackageFilePath(fqName), packageStream)
+        if (packageProto.getMemberCount() > 0) {
+            packageProto.writeTo(packageStream)
+            writeFun(getPackageFilePath(fqName), packageStream)
+        }
 
         val nameStream = ByteArrayOutputStream()
         val strings = serializer.getStringTable()
-        SerializationUtil.serializeStringTable(nameStream, strings.serializeSimpleNames(), strings.serializeQualifiedNames())
-        writeFun(BuiltInsSerializationUtil.getStringTableFilePath(fqName), nameStream)
+
+        serializeClassNamesInPackage(fqName, fragments, strings, writeFun)
+
+        val simpleNames = strings.serializeSimpleNames()
+        val qualifiedNames = strings.serializeQualifiedNames()
+
+        if (simpleNames.getStringCount() > 0 || qualifiedNames.getQualifiedNameCount() > 0) {
+            SerializationUtil.serializeStringTable(nameStream, simpleNames, qualifiedNames)
+            writeFun(getStringTableFilePath(fqName), nameStream)
+        }
     }
 
-    fun getFileName(classDescriptor: ClassDescriptor): String {
-        return BuiltInsSerializationUtil.getClassMetadataPath(classDescriptor.classId)
+    private fun serializeClassNamesInPackage(
+            fqName: FqName,
+            packageFragments: Collection<PackageFragmentDescriptor>,
+            stringTable: StringTable,
+            writeFun: (String, ByteArrayOutputStream) -> Unit
+    ) {
+        val classes = packageFragments.flatMap {
+            it.getMemberScope().getDescriptors(DescriptorKindFilter.CLASSIFIERS).filterIsInstance<ClassDescriptor>()
+        }
+
+        val builder = JsProtoBuf.Classes.newBuilder()
+
+        for (descriptor in DescriptorSerializer.sort(classes)) {
+            builder.addClassName(stringTable.getSimpleNameIndex(descriptor.getName()))
+        }
+
+        val classesProto = builder.build()
+
+        if (classesProto.getClassNameCount() > 0) {
+            val stream = ByteArrayOutputStream()
+            classesProto.writeTo(stream)
+            writeFun(getClassesInPackageFilePath(fqName), stream)
+        }
     }
 
-    private fun getPackageName(filePath: String): String {
-        return filePath.substringBeforeLast('/').replace('/', '.')
+    private fun getFileName(classDescriptor: ClassDescriptor): String {
+        return getClassMetadataPath(classDescriptor.classId)
     }
 
-    private fun getPackages(contentMap: Map<String, ByteArray>): List<String> =
-            contentMap.keySet().filter { it.endsWith(PACKAGE_FILE_EXT) }.map { getPackageName(it) }
+    private fun ByteArray.toContentMap(): Map<String, ByteArray> {
+        val gzipInputStream = GZIPInputStream(ByteArrayInputStream(this))
+        val content = JsProtoBuf.Library.parseFrom(gzipInputStream)
+        gzipInputStream.close()
+
+        val contentMap: MutableMap<String, ByteArray> = hashMapOf()
+        content.getEntryList().forEach { entry -> contentMap[entry.getPath()] = entry.getContent().toByteArray() }
+
+        return contentMap
+    }
+
+    private fun isPackageMetadataFile(fileName: String): Boolean =
+            getPackageFilePath(getPackageFqName(fileName)) == fileName
+
+    private fun isStringTableFile(fileName: String): Boolean =
+            getStringTableFilePath(getPackageFqName(fileName)) == fileName
+
+    private fun isClassesInPackageFile(fileName: String): Boolean =
+            getClassesInPackageFilePath(getPackageFqName(fileName)) == fileName
+
+    private fun getPackageFqName(fileName: String): FqName = FqName(getPackageName(fileName))
+
+    private fun getPackageName(filePath: String): String = filePath.substringBeforeLast('/').replace('/', '.')
+
+    private fun getPackages(contentMap: Map<String, ByteArray>): Set<String> {
+        val keys = contentMap.keySet().map { (if (it.startsWith('/')) it else "/" + it).substringBeforeLast('/') }.toSet()
+
+        val result = hashSetOf<String>()
+
+        fun addNames(name: String) {
+            result.add(name)
+            if (name != "") {
+                addNames(name.substringBeforeLast('/'))
+            }
+        }
+
+        keys.forEach { addNames(it) }
+
+        return result.map { it.substringAfter('/').replace('/', '.') }.toSet()
+    }
+
+    private val CLASSES__FILE_EXTENSION = "kotlin_classes"
+    private val STRING_TABLE_FILE_EXTENSION = "kotlin_string_table"
+
+    public fun getClassMetadataPath(classId: ClassId): String {
+        return packageFqNameToPath(classId.getPackageFqName()) + "/" + classId.getRelativeClassName().asString() +
+               "." + CLASS_METADATA_FILE_EXTENSION
+    }
+
+    public fun getClassesInPackageFilePath(fqName: FqName): String =
+            packageFqNameToPath(fqName) + "/" + shortName(fqName) + "." + CLASSES__FILE_EXTENSION
+
+    public fun getPackageFilePath(fqName: FqName): String =
+            (if (fqName.isRoot()) "/" else "") +
+                packageFqNameToPath(PackageClassUtils.getPackageClassFqName(fqName)) + "." + CLASS_METADATA_FILE_EXTENSION
+
+    public fun getStringTableFilePath(fqName: FqName): String =
+            packageFqNameToPath(fqName) + "/" + shortName(fqName) + "." + STRING_TABLE_FILE_EXTENSION
+
+
+    private fun packageFqNameToPath(fqName: FqName): String =
+            fqName.asString().replace('.', '/')
+
+    private fun shortName(fqName: FqName): String =
+            if (fqName.isRoot()) "default-package" else fqName.shortName().asString()
 }
+
