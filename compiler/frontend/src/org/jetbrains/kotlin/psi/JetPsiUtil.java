@@ -129,15 +129,22 @@ public class JetPsiUtil {
                 }
             }
         }
-        else if (expression instanceof JetLabeledExpression) {
+
+        if (expression instanceof JetAnnotatedExpression) {
+            expression = ((JetAnnotatedExpression) expression).getBaseExpression();
+        }
+
+        if (expression instanceof JetLabeledExpression) {
             JetExpression baseExpression = ((JetLabeledExpression) expression).getBaseExpression();
             if (baseExpression != null) {
                 expression = baseExpression;
             }
         }
-        else if (expression instanceof JetExpressionWrapper) {
+
+        if (expression instanceof JetExpressionWrapper) {
             expression = ((JetExpressionWrapper) expression).getBaseExpression();
         }
+
         if (expression instanceof JetParenthesizedExpression) {
             JetExpression innerExpression = ((JetParenthesizedExpression) expression).getExpression();
             return innerExpression != null && deparenthesizeRecursively ? deparenthesizeWithResolutionStrategy(
