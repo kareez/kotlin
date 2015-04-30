@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.idea.decompiler.stubBuilder
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.indexing.FileContentImpl
 import org.jetbrains.kotlin.idea.decompiler.textBuilder.buildDecompiledTextFromJsMetadata
+import org.jetbrains.kotlin.idea.js.KotlinJavascriptLibraryManager
 import org.jetbrains.kotlin.idea.test.JetLightCodeInsightFixtureTestCase
 import org.jetbrains.kotlin.idea.test.KotlinStdJSProjectDescriptor
 import org.jetbrains.kotlin.load.kotlin.PackageClassUtils
@@ -40,6 +41,9 @@ public class KotlinJavascriptStubConsistencyTest : JetLightCodeInsightFixtureTes
 
     private fun doTest(packageFqName: FqName) {
         val project = getProject()
+
+        KotlinJavascriptLibraryManager.getInstance(project).updateProjectLibrary(true)
+
         val virtualFileFinder = VirtualFileFinderFactory.SERVICE.getInstance(project).create(GlobalSearchScope.allScope(project))
         val packageFile = virtualFileFinder.findVirtualFileWithHeader(PackageClassUtils.getPackageClassId(packageFqName))!!
 
