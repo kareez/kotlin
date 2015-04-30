@@ -31,6 +31,7 @@ import com.intellij.psi.PsiElement;
 import org.apache.commons.lang.SystemUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.idea.js.KotlinJavascriptLibraryManager;
 import org.jetbrains.kotlin.idea.test.DirectiveBasedActionUtils;
 import org.jetbrains.kotlin.idea.KotlinLightQuickFixTestCase;
 import org.jetbrains.kotlin.idea.test.PluginTestCaseBase;
@@ -38,6 +39,7 @@ import org.jetbrains.kotlin.psi.JetFile;
 import org.jetbrains.kotlin.idea.test.ConfigLibraryUtil;
 import org.jetbrains.kotlin.test.InTextDirectivesUtils;
 import org.jetbrains.kotlin.test.TestMetadata;
+import org.jetbrains.kotlin.utils.PathUtil;
 import org.junit.Assert;
 
 import java.io.File;
@@ -81,9 +83,11 @@ public abstract class AbstractQuickFixTest extends KotlinLightQuickFixTestCase {
         }
     }
 
-    private static void configureRuntimeIfNeeded(@NotNull String beforeFileName) {
+    private void configureRuntimeIfNeeded(@NotNull String beforeFileName) {
         if (beforeFileName.endsWith("JsRuntime.kt")) {
             ConfigLibraryUtil.configureKotlinJsRuntimeAndSdk(getModule(), getFullJavaJDK());
+            String stdlibPath = PathUtil.getKotlinPathsForIdeaPlugin().getJsStdLibJarPath().getAbsolutePath();
+            KotlinJavascriptLibraryManager.getInstance(getProject()).fileCreated(stdlibPath, true);
         }
         else if (beforeFileName.endsWith("Runtime.kt")) {
             ConfigLibraryUtil.configureKotlinRuntimeAndSdk(getModule(), getFullJavaJDK());
