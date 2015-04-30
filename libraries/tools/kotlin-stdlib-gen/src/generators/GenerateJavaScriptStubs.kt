@@ -88,7 +88,7 @@ $imports
             val interfaces = klass.getInterfaces()
             val extends = if (interfaces != null && interfaces.size == 1) ": ${interfaces[0]?.getSimpleName()}" else ""
 
-            println("deprecated(\"Use org.w3c.dom3 instead\")")
+            println("deprecated(\"Use org.w3c.dom instead\")")
             println("native public trait ${klass.getSimpleName()}$extends {")
 
             val methods = klass.getDeclaredMethods().sortBy { it.getName()!! }
@@ -135,7 +135,7 @@ $imports
                     if (typeName == null) {
                         validMethods.add(pk.method)
                     } else {
-                        println("    deprecated(\"Use org.w3c.dom3 instead\")")
+                        println("    deprecated(\"Use org.w3c.dom instead\")")
                         println("    public ${pk.kind} ${pk.name}: ${typeName}")
                     }
                 }
@@ -146,7 +146,7 @@ $imports
                     var counter = 0
                     val parameters = parameterTypes.map{ "arg${++counter}: ${parameterTypeName(it)}" }.makeString(", ")
                     val returnType = simpleTypeName(method.getReturnType())
-                    println("    deprecated(\"Use org.w3c.dom3 instead\")")
+                    println("    deprecated(\"Use org.w3c.dom instead\")")
                     println("    public fun ${method.getName()}($parameters): $returnType = noImpl")
                 }
             }
@@ -164,7 +164,7 @@ $imports
                                     val value = field.get(null)
                                     if (value != null) {
                                         val fieldType = simpleTypeName(field.getType())
-                                        println("        deprecated(\"Use org.w3c.dom3 instead\")")
+                                        println("        deprecated(\"Use org.w3c.dom instead\")")
                                         println("        public val ${field.getName()}: $fieldType = $value")
                                     }
                                 } catch (e: Exception) {

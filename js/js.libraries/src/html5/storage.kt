@@ -23,7 +23,7 @@ native
 public val sessionStorage: org.w3c.dom3.Storage = noImpl
 
 native
-deprecated("Use org.w3c.dom3")
+deprecated("Use org.w3c.dom")
 public trait Storage {
     public val length: Int
             get() = noImpl
