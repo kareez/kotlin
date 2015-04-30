@@ -16,7 +16,10 @@
 
 package org.jetbrains.kotlin.resolve.calls.tasks.collectors
 
+import org.jetbrains.kotlin.builtins.functions.FunctionInvokeDescriptor
 import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.descriptors.impl.SimpleFunctionDescriptorImpl
+import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.BindingTrace
 import org.jetbrains.kotlin.resolve.DescriptorUtils.isStaticNestedClass
@@ -26,6 +29,7 @@ import org.jetbrains.kotlin.resolve.descriptorUtil.hasClassObjectType
 import org.jetbrains.kotlin.resolve.scopes.JetScope
 import org.jetbrains.kotlin.types.ErrorUtils
 import org.jetbrains.kotlin.types.JetType
+import org.jetbrains.kotlin.types.expressions.OperatorConventions
 
 public trait CallableDescriptorCollector<D : CallableDescriptor> {
 
@@ -173,7 +177,41 @@ private fun <D : CallableDescriptor> CallableDescriptorCollector<D>.filtered(fil
         }
 
         override fun getExtensionsByName(scope: JetScope, name: Name, bindingTrace: BindingTrace): Collection<D> {
-            return delegate.getExtensionsByName(scope, name, bindingTrace).filter(filter)
+            val result = delegate.getExtensionsByName(scope, name, bindingTrace).toArrayList()
+
+            if (name == OperatorConventions.INVOKE) {
+                for (invoke in delegate.getNonExtensionsByName(scope, name, bindingTrace).filterIsInstance<FunctionInvokeDescriptor>()) {
+                    if (invoke.getValueParameters().isEmpty()) continue
+
+                    val ext = SimpleFunctionDescriptorImpl.create(
+                            invoke.getContainingDeclaration(),
+                            invoke.getAnnotations(),
+                            invoke.getName(),
+                            CallableMemberDescriptor.Kind.SYNTHESIZED, // TODO: ?
+                            invoke.getSource()
+                    )
+                    ext.initialize(
+                            invoke.getValueParameters().first().getType(),
+                            invoke.getDispatchReceiverParameter(),
+                            invoke.getTypeParameters(),
+                            invoke.getValueParameters().drop(1).map { p ->
+                                val index = p.getIndex() - 1
+                                ValueParameterDescriptorImpl(
+                                        ext, null, index, p.getAnnotations(), Name.identifier("p${index + 1}"), p.getType(),
+                                        p.declaresDefaultValue(), p.getVarargElementType(), p.getSource()
+                                )
+                            },
+                            invoke.getReturnType(),
+                            invoke.getModality(),
+                            invoke.getVisibility()
+                    )
+
+                    [suppress("UNCHECKED_CAST")]
+                    result.add(ext as D)
+                }
+            }
+
+            return result.filter(filter)
         }
 
         override fun toString(): String {

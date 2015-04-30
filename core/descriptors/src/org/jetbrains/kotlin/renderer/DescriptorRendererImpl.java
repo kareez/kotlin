@@ -497,6 +497,8 @@ public class DescriptorRendererImpl implements DescriptorRenderer {
     private String renderFunctionType(@NotNull JetType type) {
         StringBuilder sb = new StringBuilder();
 
+        boolean isExtension = KotlinBuiltIns.isTypeAnnotatedWithExtension(type);
+
         JetType receiverType = KotlinBuiltIns.getReceiverType(type);
         if (receiverType != null) {
             sb.append(renderNormalizedType(receiverType));
