@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
+import org.jetbrains.kotlin.idea.js.KotlinJavascriptLibraryManager
 import org.jetbrains.kotlin.idea.test.JetLightCodeInsightFixtureTestCase
 import org.jetbrains.kotlin.idea.test.KotlinStdJSProjectDescriptor
 import org.jetbrains.kotlin.load.kotlin.PackageClassUtils
@@ -51,6 +52,8 @@ public class KotlinJavascriptDecompiledTextConsistencyTest : JetLightCodeInsight
 
     private fun doTest(packageFqName: FqName) {
         val project = getProject()
+        KotlinJavascriptLibraryManager.getInstance(project).updateProjectLibrary(true)
+
         val virtualFileFinder = VirtualFileFinderFactory.SERVICE.getInstance(project).create(GlobalSearchScope.allScope(project))
         val packageFile = virtualFileFinder.findVirtualFileWithHeader(PackageClassUtils.getPackageClassId(packageFqName))!!
 
