@@ -280,4 +280,11 @@ public object KotlinJavascriptSerializationUtil {
     private fun writeFiles(contentMap: Map<String, ByteArray>, outputDir: File) {
         contentMap.keySet().forEach { FileUtil.writeToFile(File(outputDir, it), contentMap[it]!!) }
     }
+
+    public fun writeFiles(metadata: ByteArray, writeFun: (filePath: String, fileContent: ByteArray) -> Unit): Unit =
+            writeFiles(metadata.toContentMap(), writeFun)
+
+    private fun writeFiles(contentMap: Map<String, ByteArray>, writeFun: (filePath: String, fileContent: ByteArray) -> Unit) {
+        contentMap.keySet().forEach { writeFun(it, contentMap[it]!!) }
+    }
 }
