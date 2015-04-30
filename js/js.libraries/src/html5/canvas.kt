@@ -3,6 +3,7 @@ package kotlin.js.dom.html5
 import kotlin.js.dom.html.HTMLElement
 import org.w3c.dom.Element
 
+deprecated("Use org.w3c.dom3 instead")
 public native trait HTMLCanvasElement : HTMLElement {
     public var width: Double
     public var height: Double
