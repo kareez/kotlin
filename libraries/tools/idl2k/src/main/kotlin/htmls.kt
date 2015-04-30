@@ -22,15 +22,6 @@ val urls = listOf(
         "http://dev.w3.org/csswg/cssom/"
 )
 
-val constantPart = """
-[NoInterfaceObject]
-interface HasStyle {
-    attribute style : dynamic
-};
-
-HTMLElement implements HasStyle;
-"""
-
 private fun extractIDLText(url: String, out: StringBuilder) {
 //    val soup = Jsoup.connect(url).validateTLSCertificates(false).ignoreHttpErrors(true).get()
     val soup = Jsoup.parse(URL(url).readText())
