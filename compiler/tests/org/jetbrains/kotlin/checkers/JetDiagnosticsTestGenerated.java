@@ -10014,6 +10014,12 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 doTest(fileName);
             }
 
+            @TestMetadata("objectLiteralAsArgument.kt")
+            public void testObjectLiteralAsArgument() throws Exception {
+                String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/objectLiteralAsArgument.kt");
+                doTest(fileName);
+            }
+
             @TestMetadata("resolveWithFunctionLiteralWithId.kt")
             public void testResolveWithFunctionLiteralWithId() throws Exception {
                 String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/resolveWithFunctionLiteralWithId.kt");
@@ -10229,6 +10235,18 @@ public class JetDiagnosticsTestGenerated extends AbstractJetDiagnosticsTest {
                 @TestMetadata("kt5971NestedSafeCall.kt")
                 public void testKt5971NestedSafeCall() throws Exception {
                     String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/nestedCalls/kt5971NestedSafeCall.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("kt7597.kt")
+                public void testKt7597() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/nestedCalls/kt7597.kt");
+                    doTest(fileName);
+                }
+
+                @TestMetadata("twoTypeParameters.kt")
+                public void testTwoTypeParameters() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/diagnostics/tests/resolve/nestedCalls/twoTypeParameters.kt");
                     doTest(fileName);
                 }
             }
