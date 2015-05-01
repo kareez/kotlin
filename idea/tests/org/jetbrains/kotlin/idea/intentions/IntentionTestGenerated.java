@@ -4150,6 +4150,12 @@ public class IntentionTestGenerated extends AbstractIntentionTest {
             doTest(fileName);
         }
 
+        @TestMetadata("NullVariableUsed.kt")
+        public void testNullVariableUsed() throws Exception {
+            String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/ifNullToElvis/NullVariableUsed.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("OtherVar1.kt")
         public void testOtherVar1() throws Exception {
             String fileName = JetTestUtils.navigationMetadata("idea/testData/intentions/ifNullToElvis/OtherVar1.kt");
