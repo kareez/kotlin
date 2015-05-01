@@ -21,8 +21,11 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.SmartPsiElementPointer
 import com.intellij.psi.codeStyle.CodeStyleManager
+import com.intellij.psi.impl.source.codeStyle.CodeEditUtil
 import org.jetbrains.kotlin.psi.psiUtil.parents
-import java.util.*
+import java.util.ArrayList
+import java.util.HashMap
+import java.util.LinkedHashMap
 
 public fun JetPsiFactory.createExpressionByPattern(pattern: String, vararg args: Any): JetExpression {
     val (processedText, allPlaceholders) = processPattern(pattern, args)
@@ -36,6 +39,8 @@ public fun JetPsiFactory.createExpressionByPattern(pattern: String, vararg args:
 
     val pointers = HashMap<SmartPsiElementPointer<PsiElement>, Int>()
     for ((n, placeholders) in allPlaceholders) {
+        if (args[n] is String) continue // already in the text
+
         for ((range, text) in placeholders) {
             val token = expression.findElementAt(range.getStartOffset())!!
             for (element in token.parents()) {
@@ -54,8 +59,34 @@ public fun JetPsiFactory.createExpressionByPattern(pattern: String, vararg args:
         }
     }
 
+    val codeStyleManager = CodeStyleManager.getInstance(project)
 
-    expression = CodeStyleManager.getInstance(project).reformat(expression, true) as JetExpression
+
+    val stringPlaceholderRanges = allPlaceholders
+            .filter { args[it.getKey()] is String }
+            .flatMap { it.getValue() }
+            .map { it.range }
+            .sortBy { -it.getStartOffset() }
+
+    // reformat whole text except for String arguments (as they can contain user's formatting to be preserved)
+    if (stringPlaceholderRanges.none()) {
+        expression = codeStyleManager.reformat(expression, true) as JetExpression
+    }
+    else {
+        var bound = expression.getTextRange().getEndOffset() - 1
+        for (range in stringPlaceholderRanges) {
+            // we extend reformatting range by 1 to the right because otherwise some of spaces are not reformatted
+            expression = codeStyleManager.reformatRange(expression, range.getEndOffset() + start, bound + 1, true) as JetExpression
+            bound = range.getStartOffset() + start
+        }
+        expression = codeStyleManager.reformatRange(expression, start, bound + 1, true) as JetExpression
+
+        // we need to adjust indent of all lines within expression
+        codeStyleManager.adjustLineIndent(expression.getContainingFile(), expression.getTextRange())
+    }
+
+    // do not reformat the whole expression in PostprocessReformattingAspect
+    CodeEditUtil.setNodeGeneratedRecursively(expression.getNode(), false)
 
     for ((pointer, n) in pointers) {
         val element = pointer.getElement()!!
@@ -102,19 +133,12 @@ private fun processPattern(pattern: String, args: Array<out Any>): PatternData {
                     check(n >= 0, "invalid placeholder number: $n")
                     i = lastIndex
 
-                    val placeholders = ranges.getOrPut(n, { ArrayList() })
-
                     val arg: Any? = if (n < args.size()) args[n] else null /* report wrong number of arguments later */
-                    if (arg is String) { // no placeholder needed
-                        check(charOrNull(i) != '=', "do not specify placeholder text for $$n - String argument passed")
-                        append(arg)
-                        continue
-                    }
-
                     val placeholderText = if (charOrNull(i) != '=') {
-                        "xxx"
+                        arg as? String ?: "xyz"
                     }
                     else {
+                        check(arg !is String, "do not specify placeholder text for $$n - String argument passed")
                         i++
                         val endIndex = pattern.indexOf('$', i)
                         check(endIndex >= 0, "unclosed placeholder text")
@@ -126,7 +150,7 @@ private fun processPattern(pattern: String, args: Array<out Any>): PatternData {
 
                     append(placeholderText)
                     val range = TextRange(length() - placeholderText.length(), length())
-                    placeholders.add(Placeholder(range, placeholderText))
+                    ranges.getOrPut(n, { ArrayList() }).add(Placeholder(range, placeholderText))
                     continue
                 }
             }
