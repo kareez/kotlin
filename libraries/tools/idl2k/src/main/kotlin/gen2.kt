@@ -171,7 +171,7 @@ private fun <O : Appendable> O.renderAttributeDeclaration(allTypes: Set<String>,
     }
     if (arg.setterNoImpl) {
         indent(level + 1)
-        appendln("        set(value) = noImpl")
+        appendln("set(value) = noImpl")
     }
 }
 
