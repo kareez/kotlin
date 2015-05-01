@@ -39,10 +39,7 @@ import org.jetbrains.kotlin.generators.tests.generator.TestGenerator.TargetBacke
 import org.jetbrains.kotlin.generators.tests.reservedWords.generateTestDataForReservedWords
 import org.jetbrains.kotlin.idea.AbstractExpressionSelectionTest
 import org.jetbrains.kotlin.idea.AbstractSmartSelectionTest
-import org.jetbrains.kotlin.idea.codeInsight.AbstractInsertImportOnPasteTest
-import org.jetbrains.kotlin.idea.codeInsight.AbstractJetInspectionTest
-import org.jetbrains.kotlin.idea.codeInsight.AbstractLineMarkersTest
-import org.jetbrains.kotlin.idea.codeInsight.AbstractOutOfBlockModificationTest
+import org.jetbrains.kotlin.idea.codeInsight.*
 import org.jetbrains.kotlin.idea.codeInsight.moveUpDown.AbstractCodeMoverTest
 import org.jetbrains.kotlin.idea.codeInsight.surroundWith.AbstractSurroundWithTest
 import org.jetbrains.kotlin.idea.codeInsight.unwrap.AbstractUnwrapRemoveTest
@@ -72,6 +69,7 @@ import org.jetbrains.kotlin.idea.highlighter.AbstractHighlightExitPointsTest
 import org.jetbrains.kotlin.idea.highlighter.AbstractHighlightingTest
 import org.jetbrains.kotlin.idea.imports.AbstractOptimizeImportsTest
 import org.jetbrains.kotlin.idea.intentions.AbstractIntentionTest
+import org.jetbrains.kotlin.idea.intentions.AbstractMultiFileIntentionTest
 import org.jetbrains.kotlin.idea.intentions.declarations.AbstractJoinLinesTest
 import org.jetbrains.kotlin.idea.internal.AbstractBytecodeToolWindowTest
 import org.jetbrains.kotlin.idea.kdoc.AbstractKDocHighlightingTest
@@ -495,6 +493,14 @@ fun main(args: Array<String>) {
 
         testClass(javaClass<AbstractJetMoveTest>()) {
             model("refactoring/move", extension = "test", singleClass = true)
+        }
+
+        testClass(javaClass<AbstractMultiFileIntentionTest>()) {
+            model("multiFileIntentions", extension = "test", singleClass = true)
+        }
+
+        testClass(javaClass<AbstractJetMultiFileInspectionTest>()) {
+            model("multiFileInspections", extension = "test", singleClass = true)
         }
 
         testClass(javaClass<AbstractConfigureProjectByChangingFileTest>()) {
