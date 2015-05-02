@@ -16,45 +16,23 @@
 
 package org.jetbrains.kotlin.idea.intentions
 
+import com.intellij.openapi.util.TextRange
 import org.jetbrains.kotlin.JetNodeTypes
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
+import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.idea.caches.resolve.analyze
+import org.jetbrains.kotlin.idea.references.JetReference
 import org.jetbrains.kotlin.idea.util.IdeDescriptorRenderers
 import org.jetbrains.kotlin.idea.util.ShortenReferences
-import org.jetbrains.kotlin.lexer.JetTokens
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.psi.psiUtil.parents
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.types.JetType
-import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
 
-fun specifyTypeExplicitly(declaration: JetNamedFunction, typeText: String) {
-    specifyTypeExplicitly(declaration, JetPsiFactory(declaration).createType(typeText))
-}
-
-fun specifyTypeExplicitly(declaration: JetNamedFunction, type: JetType) {
+fun JetCallableDeclaration.setType(type: JetType) {
     if (type.isError()) return
-    val typeReference = JetPsiFactory(declaration).createType(IdeDescriptorRenderers.SOURCE_CODE.renderType(type))
-    specifyTypeExplicitly(declaration, typeReference)
-    ShortenReferences.DEFAULT.process(declaration.getTypeReference()!!)
-}
-
-fun specifyTypeExplicitly(declaration: JetNamedFunction, typeReference: JetTypeReference) {
-    val anchor = declaration.getValueParameterList() ?: return/*incomplete declaration*/
-    declaration.addAfter(typeReference, anchor)
-    declaration.addAfter(JetPsiFactory(declaration).createColon(), anchor)
-}
-
-fun expressionType(expression: JetExpression): JetType? {
-    val bindingContext = expression.analyze()
-    return bindingContext.getType(expression)
-}
-
-fun functionReturnType(function: JetNamedFunction): JetType? {
-    val bindingContext = function.analyze()
-    val descriptor = bindingContext.get(BindingContext.DECLARATION_TO_DESCRIPTOR, function)
-    if (descriptor == null) return null
-    return (descriptor as FunctionDescriptor).getReturnType()
+    val typeReference = JetPsiFactory(getProject()).createType(IdeDescriptorRenderers.SOURCE_CODE.renderType(type))
+    setTypeReference(typeReference)
+    ShortenReferences.DEFAULT.process(getTypeReference()!!)
 }
 
 fun JetContainerNode.description(): String? {
@@ -70,4 +48,14 @@ fun JetContainerNode.description(): String? {
         }
     }
     return null
+}
+
+fun TextRange.containsInside(offset: Int) = getStartOffset() < offset && offset < getEndOffset()
+
+fun isAutoCreatedItUsage(expression: JetSimpleNameExpression): Boolean {
+    if (expression.getReferencedName() != "it") return false
+    val context = expression.analyze()
+    val reference = expression.getReference() as JetReference?
+    val target = reference?.resolveToDescriptors(context)?.singleOrNull() as? ValueParameterDescriptor? ?: return false
+    return context[BindingContext.AUTO_CREATED_IT, target]
 }

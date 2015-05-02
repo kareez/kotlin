@@ -499,6 +499,11 @@
         implementationClass="org.jetbrains.kotlin.idea.search.ideaExtensions.JetTargetElementEvaluator" />
 
     <intentionAction>
+      <className>org.jetbrains.kotlin.idea.intentions.IfNullToElvisIntention</className>
+      <category>Kotlin</category>
+    </intentionAction>
+
+    <intentionAction>
       <className>org.jetbrains.kotlin.idea.intentions.SpecifyTypeExplicitlyAction</className>
       <category>Kotlin</category>
     </intentionAction>
@@ -709,17 +714,17 @@
     </intentionAction>
 
     <intentionAction>
-      <className>org.jetbrains.kotlin.idea.intentions.ReconstructTypeInCastOrIsAction</className>
+      <className>org.jetbrains.kotlin.idea.intentions.ReconstructTypeInCastOrIsIntention</className>
       <category>Kotlin</category>
     </intentionAction>
 
     <intentionAction>
-      <className>org.jetbrains.kotlin.idea.intentions.ReplaceWithDotQualifiedMethodCallIntention</className>
+      <className>org.jetbrains.kotlin.idea.intentions.InfixCallToOrdinaryIntention</className>
       <category>Kotlin</category>
     </intentionAction>
 
     <intentionAction>
-      <className>org.jetbrains.kotlin.idea.intentions.ReplaceWithInfixFunctionCallIntention</className>
+      <className>org.jetbrains.kotlin.idea.intentions.ToInfixCallIntention</className>
       <category>Kotlin</category>
     </intentionAction>
 
@@ -789,12 +794,12 @@
     </intentionAction>
 
     <intentionAction>
-      <className>org.jetbrains.kotlin.idea.intentions.MakeTypeExplicitInLambdaIntention</className>
+      <className>org.jetbrains.kotlin.idea.intentions.SpecifyExplicitLambdaSignatureIntention</className>
       <category>Kotlin</category>
     </intentionAction>
 
     <intentionAction>
-      <className>org.jetbrains.kotlin.idea.intentions.MakeTypeImplicitInLambdaIntention</className>
+      <className>org.jetbrains.kotlin.idea.intentions.RemoveExplicitLambdaParameterTypesIntention</className>
       <category>Kotlin</category>
     </intentionAction>
 
@@ -863,35 +868,42 @@
       <category>Kotlin</category>
     </intentionAction>
 
-    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.ExplicitGetInspection"
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.ExplicitGetInspection"
         displayName="Explicit 'get'"
         groupName="Kotlin"
         enabledByDefault="false"
         level="WEAK WARNING"
         />
 
-    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.IfThenToElvisInspection"
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.IfThenToElvisInspection"
         displayName="If-Then foldable to '?:'"
         groupName="Kotlin"
         enabledByDefault="true"
         level="WEAK WARNING"
         />
 
-    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.IfThenToSafeAccessInspection"
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.IfThenToSafeAccessInspection"
         displayName="If-Then foldable to '?.'"
         groupName="Kotlin"
         enabledByDefault="true"
         level="WEAK WARNING"
         />
 
-    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.RemoveExplicitTypeArgsInspection"
+      <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.IfNullToElvisInspection"
+        displayName="If-Null return/break/... foldable to '?:'"
+        groupName="Kotlin"
+        enabledByDefault="true"
+        level="WEAK WARNING"
+        />
+
+      <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.RemoveExplicitTypeArgsInspection"
         displayName="Type arguments are unnecessary"
         groupName="Kotlin"
         enabledByDefault="true"
         level="WEAK WARNING"
         />
 
-    <localInspection implementationClass="org.jetbrains.kotlin.idea.inspections.SimplifyBinaryNegationInspection"
+    <localInspection implementationClass="org.jetbrains.kotlin.idea.intentions.SimplifyBinaryNegationInspection"
         displayName="Simplify Negated Binary Expression"
         groupName="Kotlin"
         enabledByDefault="true"
