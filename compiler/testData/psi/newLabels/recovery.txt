@@ -107,8 +107,10 @@ JetFile: recovery.kt
             PsiWhiteSpace('\n        ')
             RETURN
               PsiElement(return)('return')
+              PsiErrorElement:There should be no space or comments before '@' in label reference
+                <empty list>
               PsiWhiteSpace(' ')
-              PsiErrorElement:Expected annotation identifier after '@'
+              PsiErrorElement:Label must be named
                 PsiElement(AT)('@')
               PsiWhiteSpace(' ')
               REFERENCE_EXPRESSION
@@ -256,8 +258,10 @@ JetFile: recovery.kt
         PsiWhiteSpace('\n\n    ')
         RETURN
           PsiElement(return)('return')
+          PsiErrorElement:There should be no space or comments before '@' in label reference
+            <empty list>
           PsiWhiteSpace(' ')
-          PsiErrorElement:Expected annotation identifier after '@'
+          PsiErrorElement:Label must be named
             PsiElement(AT)('@')
           PsiWhiteSpace(' ')
           INTEGER_CONSTANT

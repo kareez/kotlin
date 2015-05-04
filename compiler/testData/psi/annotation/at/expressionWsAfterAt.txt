@@ -14,8 +14,10 @@ JetFile: expressionWsAfterAt.kt
       PsiWhiteSpace('\n    ')
       RETURN
         PsiElement(return)('return')
+        PsiErrorElement:There should be no space or comments before '@' in label reference
+          <empty list>
         PsiWhiteSpace(' ')
-        PsiErrorElement:Expected annotation identifier after '@'
+        PsiErrorElement:Label must be named
           PsiElement(AT)('@')
         PsiWhiteSpace(' ')
         REFERENCE_EXPRESSION
