@@ -34,6 +34,8 @@ private @open [Ann1(1)] @Ann2("1") Ann3("2") class A(
 
     @private
     constructor()
+
+    fun <@ann("") [ann] T : R> foo() {}
 }
 @private val x = 1
 

@@ -436,10 +436,61 @@ JetFile: validDeclarations.kt
         VALUE_PARAMETER_LIST
           PsiElement(LPAR)('(')
           PsiElement(RPAR)(')')
-        PsiWhiteSpace('\n')
+        PsiWhiteSpace('\n\n    ')
         CONSTRUCTOR_DELEGATION_CALL
           CONSTRUCTOR_DELEGATION_REFERENCE
             <empty list>
+      FUN
+        PsiElement(fun)('fun')
+        PsiWhiteSpace(' ')
+        TYPE_PARAMETER_LIST
+          PsiElement(LT)('<')
+          TYPE_PARAMETER
+            MODIFIER_LIST
+              ANNOTATION_ENTRY
+                PsiElement(AT)('@')
+                CONSTRUCTOR_CALLEE
+                  TYPE_REFERENCE
+                    USER_TYPE
+                      REFERENCE_EXPRESSION
+                        PsiElement(IDENTIFIER)('ann')
+                VALUE_ARGUMENT_LIST
+                  PsiElement(LPAR)('(')
+                  VALUE_ARGUMENT
+                    STRING_TEMPLATE
+                      PsiElement(OPEN_QUOTE)('"')
+                      PsiElement(CLOSING_QUOTE)('"')
+                  PsiElement(RPAR)(')')
+              PsiWhiteSpace(' ')
+              ANNOTATION
+                PsiElement(LBRACKET)('[')
+                ANNOTATION_ENTRY
+                  CONSTRUCTOR_CALLEE
+                    TYPE_REFERENCE
+                      USER_TYPE
+                        REFERENCE_EXPRESSION
+                          PsiElement(IDENTIFIER)('ann')
+                PsiElement(RBRACKET)(']')
+            PsiWhiteSpace(' ')
+            PsiElement(IDENTIFIER)('T')
+            PsiWhiteSpace(' ')
+            PsiElement(COLON)(':')
+            PsiWhiteSpace(' ')
+            TYPE_REFERENCE
+              USER_TYPE
+                REFERENCE_EXPRESSION
+                  PsiElement(IDENTIFIER)('R')
+          PsiElement(GT)('>')
+        PsiWhiteSpace(' ')
+        PsiElement(IDENTIFIER)('foo')
+        VALUE_PARAMETER_LIST
+          PsiElement(LPAR)('(')
+          PsiElement(RPAR)(')')
+        PsiWhiteSpace(' ')
+        BLOCK
+          PsiElement(LBRACE)('{')
+          PsiElement(RBRACE)('}')
+      PsiWhiteSpace('\n')
       PsiElement(RBRACE)('}')
   PsiWhiteSpace('\n')
   PROPERTY
