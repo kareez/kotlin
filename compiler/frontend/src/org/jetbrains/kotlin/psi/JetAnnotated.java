@@ -22,8 +22,5 @@ import java.util.List;
 
 public interface JetAnnotated extends JetElement {
     @NotNull
-    List<JetAnnotation> getAnnotations();
-
-    @NotNull
     List<JetAnnotationEntry> getAnnotationEntries();
 }

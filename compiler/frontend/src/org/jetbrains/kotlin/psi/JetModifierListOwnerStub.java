@@ -67,12 +67,4 @@ public class JetModifierListOwnerStub<T extends StubElement> extends JetElementI
         if (modifierList == null) return Collections.emptyList();
         return modifierList.getAnnotationEntries();
     }
-
-    @Override
-    @NotNull
-    public List<JetAnnotation> getAnnotations() {
-        JetModifierList modifierList = getModifierList();
-        if (modifierList == null) return Collections.emptyList();
-        return modifierList.getAnnotations();
-    }
 }

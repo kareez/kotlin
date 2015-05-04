@@ -64,14 +64,6 @@ abstract class JetDeclarationImpl extends JetExpressionImpl implements JetDeclar
         return modifierList.getAnnotationEntries();
     }
 
-    @NotNull
-    @Override
-    public List<JetAnnotation> getAnnotations() {
-        JetModifierList modifierList = getModifierList();
-        if (modifierList == null) return Collections.emptyList();
-        return modifierList.getAnnotations();
-    }
-
     @Nullable
     @Override
     public KDoc getDocComment() {

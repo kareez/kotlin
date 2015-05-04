@@ -19,11 +19,8 @@ package org.jetbrains.kotlin.psi;
 import com.intellij.lang.ASTNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.JetNodeTypes;
 import org.jetbrains.kotlin.psi.psiUtil.PsiUtilPackage;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class JetAnnotatedExpression extends JetExpressionImpl implements JetAnnotated {
@@ -39,12 +36,6 @@ public class JetAnnotatedExpression extends JetExpressionImpl implements JetAnno
     @Nullable
     public JetExpression getBaseExpression() {
         return findChildByClass(JetExpression.class);
-    }
-
-    @Override
-    @NotNull
-    public List<JetAnnotation> getAnnotations() {
-        return findChildrenByType(JetNodeTypes.ANNOTATION);
     }
 
     @Override

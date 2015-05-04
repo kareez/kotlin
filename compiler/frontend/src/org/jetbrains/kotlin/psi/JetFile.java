@@ -224,15 +224,6 @@ public class JetFile extends PsiFileBase implements JetDeclarationContainer, Jet
 
     @NotNull
     @Override
-    public List<JetAnnotation> getAnnotations() {
-        JetFileAnnotationList fileAnnotationList = getFileAnnotationList();
-        if (fileAnnotationList == null) return Collections.emptyList();
-
-        return fileAnnotationList.getAnnotations();
-    }
-
-    @NotNull
-    @Override
     public List<JetAnnotationEntry> getAnnotationEntries() {
         JetFileAnnotationList fileAnnotationList = getFileAnnotationList();
         if (fileAnnotationList == null) return Collections.emptyList();
