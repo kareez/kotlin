@@ -2147,27 +2147,17 @@ public class JetParsing extends AbstractJetParsing {
     }
 
     enum AnnotationParsingMode {
-        FILE_ANNOTATIONS_BEFORE_PACKAGE(false, true),
-        FILE_ANNOTATIONS_WHEN_PACKAGE_OMITTED(false, true),
-        ONLY_ESCAPED_REGULAR_ANNOTATIONS(false, false),
-        ALLOW_UNESCAPED_REGULAR_ANNOTATIONS(true, false),
-        ALLOW_UNESCAPED_REGULAR_ANNOTATIONS_AT_MEMBER_MODIFIER_LIST(true, false, true),
+        FILE_ANNOTATIONS_BEFORE_PACKAGE(false, true, false, false),
+        FILE_ANNOTATIONS_WHEN_PACKAGE_OMITTED(false, true, false, false),
+        ONLY_ESCAPED_REGULAR_ANNOTATIONS(false, false, false, true),
+        ALLOW_UNESCAPED_REGULAR_ANNOTATIONS(true, false, false, true),
+        ALLOW_UNESCAPED_REGULAR_ANNOTATIONS_AT_MEMBER_MODIFIER_LIST(true, false, true, true),
         PRIMARY_CONSTRUCTOR_MODIFIER_LIST(false, false, false, false);
 
         boolean allowShortAnnotations;
         boolean isFileAnnotationParsingMode;
         boolean atMemberStart = false;
         boolean allowAtAnnotations = true;
-
-        AnnotationParsingMode(boolean allowShortAnnotations, boolean onlyFileAnnotations) {
-            this.allowShortAnnotations = allowShortAnnotations;
-            this.isFileAnnotationParsingMode = onlyFileAnnotations;
-        }
-
-        AnnotationParsingMode(boolean allowShortAnnotations, boolean onlyFileAnnotations, boolean atMemberStart) {
-            this(allowShortAnnotations, onlyFileAnnotations);
-            this.atMemberStart = atMemberStart;
-        }
 
         AnnotationParsingMode(
                 boolean allowShortAnnotations,
