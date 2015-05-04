@@ -291,7 +291,7 @@ public class CallCompleter(
         if (recordedType == updatedType || updatedType == null) return updatedType
 
         fun deparenthesizeOrGetSelector(expression: JetExpression?): JetExpression? {
-            val deparenthesized = JetPsiUtil.deparenthesizeOnce(expression, /* deparenthesizeBinaryExpressionWithTypeRHS = */ false)
+            val deparenthesized = JetPsiUtil.deparenthesizeOnce(expression, /* deparenthesizeBinaryExpressionWithTypeRHS = */ true)
             if (deparenthesized != expression) return deparenthesized
 
             if (expression is JetQualifiedExpression) return expression.getSelectorExpression()

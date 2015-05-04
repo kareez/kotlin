@@ -86,7 +86,7 @@ private fun List<ValueArgument?>.filterArgsInParentheses() = filter { it !is Jet
 
 public fun Call.getValueArgumentForExpression(expression: JetExpression): ValueArgument? {
     fun JetElement.deparenthesizeStructurally(): JetElement? {
-        val deparenthesized = if (this is JetExpression) JetPsiUtil.deparenthesizeOnce(this, false) else this
+        val deparenthesized = if (this is JetExpression) JetPsiUtil.deparenthesizeOnce(this, true) else this
         return when {
             deparenthesized != this -> deparenthesized
             this is JetFunctionLiteralExpression -> this.getFunctionLiteral()
