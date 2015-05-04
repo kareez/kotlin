@@ -342,12 +342,17 @@ public class JetExpressionParsing extends AbstractJetParsing {
     private void parsePrefixExpression() {
         //        System.out.println("pre at "  + myBuilder.getTokenText());
 
-        if (at(LBRACKET)) {
+        if (at(LBRACKET) || at(AT)) {
             if (!parseLocalDeclaration()) {
                 PsiBuilder.Marker expression = mark();
-                myJetParsing.parseAnnotations(ONLY_ESCAPED_REGULAR_ANNOTATIONS);
-                parsePrefixExpression();
-                expression.done(ANNOTATED_EXPRESSION);
+                if (myJetParsing.parseAnnotations(ONLY_ESCAPED_REGULAR_ANNOTATIONS)) {
+                    parsePrefixExpression();
+                    expression.done(ANNOTATED_EXPRESSION);
+                }
+                else {
+                    expression.drop();
+                    parsePrefixExpression();
+                }
             }
         }
         else {

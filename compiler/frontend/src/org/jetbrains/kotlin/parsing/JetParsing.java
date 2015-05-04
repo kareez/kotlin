@@ -430,9 +430,27 @@ public class JetParsing extends AbstractJetParsing {
             if (annotationParsingMode.atMemberStart && atSet(SOFT_KEYWORDS_AT_MEMBER_START)) {
                 break;
             }
-            if (atSet(MODIFIER_KEYWORDS)) {
-                if (tokenConsumer != null) tokenConsumer.consume(tt());
-                advance(); // MODIFIER
+
+            if (at(AT)) {
+                IElementType strictlyNextToken = myBuilder.rawLookup(1);
+                if (strictlyNextToken == IDENTIFIER || MODIFIER_KEYWORDS.contains(strictlyNextToken)) {
+                    if (!annotationParsingMode.allowAtAnnotations) {
+                        errorAndAdvance("Only annotations in '[]' can be declared here"); // AT
+                    }
+                    else {
+                        advance(); // AT
+                    }
+
+                    if (!tryParseModifier(tokenConsumer)) {
+                        parseAnnotationEntry();
+                    }
+                }
+                else {
+                    errorAndAdvance("Expected modifier or annotation after '@'"); // AT
+                }
+            }
+            else if (tryParseModifier(tokenConsumer)) {
+                // modifier advanced
             }
             else if (at(LBRACKET) || (annotationParsingMode.allowShortAnnotations && at(IDENTIFIER))) {
                 parseAnnotation(annotationParsingMode);
@@ -449,6 +467,15 @@ public class JetParsing extends AbstractJetParsing {
             list.done(MODIFIER_LIST);
         }
         return !empty;
+    }
+
+    private boolean tryParseModifier(@Nullable Consumer<IElementType> tokenConsumer) {
+        if (atSet(MODIFIER_KEYWORDS)) {
+            if (tokenConsumer != null) tokenConsumer.consume(tt());
+            advance(); // MODIFIER
+            return true;
+        }
+        return false;
     }
 
     /*
@@ -490,6 +517,7 @@ public class JetParsing extends AbstractJetParsing {
      * annotation
      *   : "[" ("file" ":")? annotationEntry+ "]"
      *   : annotationEntry
+     *   : "@" annotationEntry
      *   ;
      */
     private boolean parseAnnotation(AnnotationParsingMode mode) {
@@ -540,6 +568,16 @@ public class JetParsing extends AbstractJetParsing {
         else if (mode.allowShortAnnotations && at(IDENTIFIER)) {
             parseAnnotationEntry();
             return true;
+        }
+        else if (mode.allowAtAnnotations && at(AT)) {
+            if (myBuilder.rawLookup(1) == IDENTIFIER) {
+                advance(); // AT
+                parseAnnotationEntry();
+                return true;
+            }
+            else {
+                errorAndAdvance("Expected annotation identifier after '@'", 1);
+            }
         }
 
         return false;
@@ -625,7 +663,7 @@ public class JetParsing extends AbstractJetParsing {
         OptionalMarker constructorModifiersMarker = new OptionalMarker(object);
         PsiBuilder.Marker beforeConstructorModifiers = mark();
         PsiBuilder.Marker primaryConstructorMarker = mark();
-        boolean hasConstructorModifiers = parseModifierList(ONLY_ESCAPED_REGULAR_ANNOTATIONS);
+        boolean hasConstructorModifiers = parseModifierList(PRIMARY_CONSTRUCTOR_MODIFIER_LIST);
 
         // Some modifiers found, but no parentheses following: class has already ended, and we are looking at something else
         if (hasConstructorModifiers && !atSet(LPAR, LBRACE, COLON)) {
@@ -2096,16 +2134,18 @@ public class JetParsing extends AbstractJetParsing {
         }
     }
 
-    static enum AnnotationParsingMode {
+    enum AnnotationParsingMode {
         FILE_ANNOTATIONS_BEFORE_PACKAGE(false, true),
         FILE_ANNOTATIONS_WHEN_PACKAGE_OMITTED(false, true),
         ONLY_ESCAPED_REGULAR_ANNOTATIONS(false, false),
         ALLOW_UNESCAPED_REGULAR_ANNOTATIONS(true, false),
-        ALLOW_UNESCAPED_REGULAR_ANNOTATIONS_AT_MEMBER_MODIFIER_LIST(true, false, true);
+        ALLOW_UNESCAPED_REGULAR_ANNOTATIONS_AT_MEMBER_MODIFIER_LIST(true, false, true),
+        PRIMARY_CONSTRUCTOR_MODIFIER_LIST(false, false, false, false);
 
         boolean allowShortAnnotations;
         boolean isFileAnnotationParsingMode;
         boolean atMemberStart = false;
+        boolean allowAtAnnotations = true;
 
         AnnotationParsingMode(boolean allowShortAnnotations, boolean onlyFileAnnotations) {
             this.allowShortAnnotations = allowShortAnnotations;
@@ -2115,6 +2155,18 @@ public class JetParsing extends AbstractJetParsing {
         AnnotationParsingMode(boolean allowShortAnnotations, boolean onlyFileAnnotations, boolean atMemberStart) {
             this(allowShortAnnotations, onlyFileAnnotations);
             this.atMemberStart = atMemberStart;
+        }
+
+        AnnotationParsingMode(
+                boolean allowShortAnnotations,
+                boolean isFileAnnotationParsingMode,
+                boolean atMemberStart,
+                boolean allowAtAnnotations
+        ) {
+            this.allowShortAnnotations = allowShortAnnotations;
+            this.isFileAnnotationParsingMode = isFileAnnotationParsingMode;
+            this.atMemberStart = atMemberStart;
+            this.allowAtAnnotations = allowAtAnnotations;
         }
     }
 }

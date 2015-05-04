@@ -23,24 +23,23 @@ JetFile: recovery.kt
         OPERATION_REFERENCE
           PsiElement(IDENTIFIER)('c')
         PsiWhiteSpace(' ')
-        LABELED_EXPRESSION
-          PsiErrorElement:Label must be named
-            PsiElement(AT)('@')
-          PsiWhiteSpace(' ')
-          FUNCTION_LITERAL_EXPRESSION
-            FUNCTION_LITERAL
-              PsiElement(LBRACE)('{')
-              PsiWhiteSpace(' ')
-              PsiComment(EOL_COMMENT)('// should be no space after c')
-              PsiWhiteSpace('\n        ')
-              BLOCK
-                RETURN
-                  PsiElement(return)('return')
-                  PsiWhiteSpace(' ')
-                  INTEGER_CONSTANT
-                    PsiElement(INTEGER_LITERAL)('2')
-              PsiWhiteSpace('\n    ')
-              PsiElement(RBRACE)('}')
+        PsiErrorElement:Expected annotation identifier after '@'
+          PsiElement(AT)('@')
+        PsiWhiteSpace(' ')
+        FUNCTION_LITERAL_EXPRESSION
+          FUNCTION_LITERAL
+            PsiElement(LBRACE)('{')
+            PsiWhiteSpace(' ')
+            PsiComment(EOL_COMMENT)('// should be no space after c')
+            PsiWhiteSpace('\n        ')
+            BLOCK
+              RETURN
+                PsiElement(return)('return')
+                PsiWhiteSpace(' ')
+                INTEGER_CONSTANT
+                  PsiElement(INTEGER_LITERAL)('2')
+            PsiWhiteSpace('\n    ')
+            PsiElement(RBRACE)('}')
       PsiWhiteSpace('\n\n    ')
       DOT_QUALIFIED_EXPRESSION
         REFERENCE_EXPRESSION
@@ -108,10 +107,8 @@ JetFile: recovery.kt
             PsiWhiteSpace('\n        ')
             RETURN
               PsiElement(return)('return')
-              PsiErrorElement:There should be no space or comments before '@' in label reference
-                <empty list>
               PsiWhiteSpace(' ')
-              PsiErrorElement:Label must be named
+              PsiErrorElement:Expected annotation identifier after '@'
                 PsiElement(AT)('@')
               PsiWhiteSpace(' ')
               REFERENCE_EXPRESSION
@@ -123,41 +120,43 @@ JetFile: recovery.kt
             RETURN
               PsiElement(return)('return')
             PsiWhiteSpace('\n        ')
-            LABELED_EXPRESSION
-              PsiErrorElement:Label must be named
-                PsiElement(AT)('@')
-              REFERENCE_EXPRESSION
-                PsiElement(IDENTIFIER)('loop2')
-            PsiWhiteSpace(' ')
-            PsiErrorElement:Unexpected tokens (use ';' to separate expressions on the same line)
-              PsiElement(INTEGER_LITERAL)('4')
+            ANNOTATED_EXPRESSION
+              PsiElement(AT)('@')
+              ANNOTATION_ENTRY
+                CONSTRUCTOR_CALLEE
+                  TYPE_REFERENCE
+                    USER_TYPE
+                      REFERENCE_EXPRESSION
+                        PsiElement(IDENTIFIER)('loop2')
+              PsiWhiteSpace(' ')
+              INTEGER_CONSTANT
+                PsiElement(INTEGER_LITERAL)('4')
           PsiWhiteSpace('\n    ')
           PsiElement(RBRACE)('}')
       PsiWhiteSpace('\n\n    ')
-      LABELED_EXPRESSION
-        PsiErrorElement:Label must be named
-          PsiElement(AT)('@')
+      PsiErrorElement:Expected annotation identifier after '@'
+        PsiElement(AT)('@')
+      PsiWhiteSpace(' ')
+      WHILE
+        PsiElement(while)('while')
         PsiWhiteSpace(' ')
-        WHILE
-          PsiElement(while)('while')
-          PsiWhiteSpace(' ')
-          PsiElement(LPAR)('(')
-          CONDITION
-            INTEGER_CONSTANT
-              PsiElement(INTEGER_LITERAL)('1')
-          PsiElement(RPAR)(')')
-          PsiWhiteSpace(' ')
-          BODY
-            BLOCK
-              PsiElement(LBRACE)('{')
-              PsiWhiteSpace('\n        ')
-              RETURN
-                PsiElement(return)('return')
-                PsiWhiteSpace(' ')
-                INTEGER_CONSTANT
-                  PsiElement(INTEGER_LITERAL)('123')
-              PsiWhiteSpace('\n    ')
-              PsiElement(RBRACE)('}')
+        PsiElement(LPAR)('(')
+        CONDITION
+          INTEGER_CONSTANT
+            PsiElement(INTEGER_LITERAL)('1')
+        PsiElement(RPAR)(')')
+        PsiWhiteSpace(' ')
+        BODY
+          BLOCK
+            PsiElement(LBRACE)('{')
+            PsiWhiteSpace('\n        ')
+            RETURN
+              PsiElement(return)('return')
+              PsiWhiteSpace(' ')
+              INTEGER_CONSTANT
+                PsiElement(INTEGER_LITERAL)('123')
+            PsiWhiteSpace('\n    ')
+            PsiElement(RBRACE)('}')
       PsiWhiteSpace('\n\n    ')
       REFERENCE_EXPRESSION
         PsiElement(IDENTIFIER)('label2')
@@ -230,12 +229,11 @@ JetFile: recovery.kt
             OPERATION_REFERENCE
               PsiElement(IDENTIFIER)('l3')
             PsiWhiteSpace(' ')
-            LABELED_EXPRESSION
-              PsiErrorElement:Label must be named
-                PsiElement(AT)('@')
-              PsiWhiteSpace(' ')
-              REFERENCE_EXPRESSION
-                PsiElement(IDENTIFIER)('bar')
+            PsiErrorElement:Expected annotation identifier after '@'
+              PsiElement(AT)('@')
+            PsiWhiteSpace(' ')
+            REFERENCE_EXPRESSION
+              PsiElement(IDENTIFIER)('bar')
           PsiWhiteSpace(' ')
           OPERATION_REFERENCE
             PsiElement(IDENTIFIER)('baz')
@@ -258,10 +256,8 @@ JetFile: recovery.kt
         PsiWhiteSpace('\n\n    ')
         RETURN
           PsiElement(return)('return')
-          PsiErrorElement:There should be no space or comments before '@' in label reference
-            <empty list>
           PsiWhiteSpace(' ')
-          PsiErrorElement:Label must be named
+          PsiErrorElement:Expected annotation identifier after '@'
             PsiElement(AT)('@')
           PsiWhiteSpace(' ')
           INTEGER_CONSTANT

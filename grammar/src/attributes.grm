@@ -9,6 +9,7 @@ annotations
 annotation
   : "[" annotationEntry+ "]"
   : annotationEntry
+  : "@" annotationEntry
   ;
 
 annotationEntry
