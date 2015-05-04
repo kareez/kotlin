@@ -537,7 +537,7 @@ public class JetExpressionParsing extends AbstractJetParsing {
         while (true) {
             PsiBuilder.Marker argument = mark();
 
-            if (!parseAnnotatedLambda(false)) {
+            if (!parseAnnotatedLambda(/* preferBlock = */false)) {
                 argument.drop();
                 break;
             }
@@ -1055,7 +1055,7 @@ public class JetExpressionParsing extends AbstractJetParsing {
      *   ;
      */
     private void parseFunctionLiteral() {
-        parseFunctionLiteral(false);
+        parseFunctionLiteral(/* preferBlock = */false);
     }
 
     private void parseFunctionLiteral(boolean preferBlock) {
@@ -1503,7 +1503,7 @@ public class JetExpressionParsing extends AbstractJetParsing {
      * If it has no ->, it's a block, otherwise a function literal
      */
     private void parseExpressionPreferringBlocks() {
-        if (!parseAnnotatedLambda(true)) {
+        if (!parseAnnotatedLambda(/* preferBlock = */true)) {
             parseExpression();
         }
     }
