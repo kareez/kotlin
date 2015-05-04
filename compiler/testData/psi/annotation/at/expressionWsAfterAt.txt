@@ -31,11 +31,12 @@ JetFile: expressionWsAfterAt.kt
         PsiWhiteSpace(' ')
         PARENTHESIZED
           PsiElement(LPAR)('(')
-          PsiErrorElement:Expected annotation identifier after '@'
-            PsiElement(AT)('@')
-          PsiWhiteSpace(' ')
-          REFERENCE_EXPRESSION
-            PsiElement(IDENTIFIER)('ann')
+          ANNOTATED_EXPRESSION
+            PsiErrorElement:Expected annotation identifier after '@'
+              PsiElement(AT)('@')
+            PsiWhiteSpace(' ')
+            REFERENCE_EXPRESSION
+              PsiElement(IDENTIFIER)('ann')
           PsiErrorElement:Expecting ')'
             <empty list>
       PsiWhiteSpace(' ')
@@ -44,11 +45,12 @@ JetFile: expressionWsAfterAt.kt
         PsiElement(RPAR)(')')
       PsiWhiteSpace('\n\n    ')
       BINARY_EXPRESSION
-        PsiErrorElement:Expected annotation identifier after '@'
-          PsiElement(AT)('@')
-        PsiWhiteSpace(' ')
-        REFERENCE_EXPRESSION
-          PsiElement(IDENTIFIER)('ann')
+        ANNOTATED_EXPRESSION
+          PsiErrorElement:Expected annotation identifier after '@'
+            PsiElement(AT)('@')
+          PsiWhiteSpace(' ')
+          REFERENCE_EXPRESSION
+            PsiElement(IDENTIFIER)('ann')
         PsiWhiteSpace(' ')
         OPERATION_REFERENCE
           PsiElement(IDENTIFIER)('foo')
@@ -59,11 +61,12 @@ JetFile: expressionWsAfterAt.kt
             PsiElement(CLOSING_QUOTE)('"')
           PsiElement(RPAR)(')')
       PsiWhiteSpace('\n\n    ')
-      PsiErrorElement:Expected annotation identifier after '@'
-        PsiElement(AT)('@')
-      PsiWhiteSpace(' ')
-      REFERENCE_EXPRESSION
-        PsiElement(IDENTIFIER)('ann')
+      ANNOTATED_EXPRESSION
+        PsiErrorElement:Expected annotation identifier after '@'
+          PsiElement(AT)('@')
+        PsiWhiteSpace(' ')
+        REFERENCE_EXPRESSION
+          PsiElement(IDENTIFIER)('ann')
       PsiWhiteSpace(' ')
       PsiErrorElement:Unexpected tokens (use ';' to separate expressions on the same line)
         PsiElement(INTEGER_LITERAL)('3')
@@ -107,11 +110,12 @@ JetFile: expressionWsAfterAt.kt
             VALUE_ARGUMENT_LIST
               PsiElement(LPAR)('(')
               VALUE_ARGUMENT
-                PsiErrorElement:Expected annotation identifier after '@'
-                  PsiElement(AT)('@')
-                PsiWhiteSpace(' ')
-                REFERENCE_EXPRESSION
-                  PsiElement(IDENTIFIER)('ann')
+                ANNOTATED_EXPRESSION
+                  PsiErrorElement:Expected annotation identifier after '@'
+                    PsiElement(AT)('@')
+                  PsiWhiteSpace(' ')
+                  REFERENCE_EXPRESSION
+                    PsiElement(IDENTIFIER)('ann')
               PsiWhiteSpace(' ')
               PsiErrorElement:Expecting ')'
                 PsiElement(fun)('fun')
@@ -146,11 +150,12 @@ JetFile: expressionWsAfterAt.kt
         PsiWhiteSpace(' ')
         PsiElement(LPAR)('(')
         CONDITION
-          PsiErrorElement:Expected annotation identifier after '@'
-            PsiElement(AT)('@')
-          PsiWhiteSpace(' ')
-          REFERENCE_EXPRESSION
-            PsiElement(IDENTIFIER)('ann')
+          ANNOTATED_EXPRESSION
+            PsiErrorElement:Expected annotation identifier after '@'
+              PsiElement(AT)('@')
+            PsiWhiteSpace(' ')
+            REFERENCE_EXPRESSION
+              PsiElement(IDENTIFIER)('ann')
         PsiErrorElement:Expecting ')
           <empty list>
         PsiWhiteSpace(' ')
@@ -191,11 +196,12 @@ JetFile: expressionWsAfterAt.kt
             PsiElement(IDENTIFIER)('label')
             PsiElement(AT)('@')
         PsiWhiteSpace(' ')
-        PsiErrorElement:Expected annotation identifier after '@'
-          PsiElement(AT)('@')
-        PsiWhiteSpace(' ')
-        REFERENCE_EXPRESSION
-          PsiElement(IDENTIFIER)('ann')
+        ANNOTATED_EXPRESSION
+          PsiErrorElement:Expected annotation identifier after '@'
+            PsiElement(AT)('@')
+          PsiWhiteSpace(' ')
+          REFERENCE_EXPRESSION
+            PsiElement(IDENTIFIER)('ann')
       PsiErrorElement:Unexpected tokens (use ';' to separate expressions on the same line)
         <empty list>
       PsiWhiteSpace(' ')
@@ -212,11 +218,12 @@ JetFile: expressionWsAfterAt.kt
           BLOCK
             PsiElement(LBRACE)('{')
             PsiWhiteSpace('\n        ')
-            PsiErrorElement:Expected annotation identifier after '@'
-              PsiElement(AT)('@')
-            PsiWhiteSpace(' ')
-            REFERENCE_EXPRESSION
-              PsiElement(IDENTIFIER)('ann')
+            ANNOTATED_EXPRESSION
+              PsiErrorElement:Expected annotation identifier after '@'
+                PsiElement(AT)('@')
+              PsiWhiteSpace(' ')
+              REFERENCE_EXPRESSION
+                PsiElement(IDENTIFIER)('ann')
             PsiErrorElement:Unexpected tokens (use ';' to separate expressions on the same line)
               <empty list>
             PsiWhiteSpace(' ')
@@ -236,22 +243,24 @@ JetFile: expressionWsAfterAt.kt
             PsiElement(AT)('@')
             PsiElement(IDENTIFIER)('label')
         PsiWhiteSpace(' ')
-        PsiErrorElement:Expected annotation identifier after '@'
-          PsiElement(AT)('@')
-        PsiWhiteSpace(' ')
-        REFERENCE_EXPRESSION
-          PsiElement(IDENTIFIER)('ann')
+        ANNOTATED_EXPRESSION
+          PsiErrorElement:Expected annotation identifier after '@'
+            PsiElement(AT)('@')
+          PsiWhiteSpace(' ')
+          REFERENCE_EXPRESSION
+            PsiElement(IDENTIFIER)('ann')
       PsiWhiteSpace(' ')
       PsiErrorElement:Unexpected tokens (use ';' to separate expressions on the same line)
         PsiElement(INTEGER_LITERAL)('1')
       PsiWhiteSpace('\n\n    ')
       PsiComment(EOL_COMMENT)('// multiline')
       PsiWhiteSpace('\n    ')
-      PsiErrorElement:Expected annotation identifier after '@'
-        PsiElement(AT)('@')
-      PsiWhiteSpace('\n    ')
-      REFERENCE_EXPRESSION
-        PsiElement(IDENTIFIER)('ann')
+      ANNOTATED_EXPRESSION
+        PsiErrorElement:Expected annotation identifier after '@'
+          PsiElement(AT)('@')
+        PsiWhiteSpace('\n    ')
+        REFERENCE_EXPRESSION
+          PsiElement(IDENTIFIER)('ann')
       PsiWhiteSpace('\n    ')
       INTEGER_CONSTANT
         PsiElement(INTEGER_LITERAL)('1')

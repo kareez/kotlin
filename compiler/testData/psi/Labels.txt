@@ -56,11 +56,12 @@ JetFile: Labels.kt
         PsiWhiteSpace(' ')
         PARENTHESIZED
           PsiElement(LPAR)('(')
-          PsiErrorElement:Expected annotation identifier after '@'
-            PsiElement(AT)('@')
-          PsiWhiteSpace(' ')
-          INTEGER_CONSTANT
-            PsiElement(INTEGER_LITERAL)('1')
+          ANNOTATED_EXPRESSION
+            PsiErrorElement:Expected annotation identifier after '@'
+              PsiElement(AT)('@')
+            PsiWhiteSpace(' ')
+            INTEGER_CONSTANT
+              PsiElement(INTEGER_LITERAL)('1')
           PsiElement(RPAR)(')')
       PsiWhiteSpace('\n  ')
       RETURN
@@ -68,11 +69,12 @@ JetFile: Labels.kt
         PsiErrorElement:Label must be named
           PsiElement(AT)('@')
         PsiWhiteSpace(' ')
-        PsiErrorElement:Expected annotation identifier after '@'
-          PsiElement(AT)('@')
-        PsiWhiteSpace(' ')
-        INTEGER_CONSTANT
-          PsiElement(INTEGER_LITERAL)('1')
+        ANNOTATED_EXPRESSION
+          PsiErrorElement:Expected annotation identifier after '@'
+            PsiElement(AT)('@')
+          PsiWhiteSpace(' ')
+          INTEGER_CONSTANT
+            PsiElement(INTEGER_LITERAL)('1')
       PsiWhiteSpace('\n\n  ')
       RETURN
         PsiElement(return)('return')
@@ -130,18 +132,20 @@ JetFile: Labels.kt
         PsiElement(return)('return')
         PsiErrorElement:Label must be named
           PsiElement(AT)('@')
-        PsiErrorElement:Expected annotation identifier after '@'
-          PsiElement(AT)('@')
-        PsiWhiteSpace('\n  ')
-        RETURN
-          PsiElement(return)('return')
-          PsiErrorElement:Label must be named
-            PsiElement(AT)('@')
+        ANNOTATED_EXPRESSION
           PsiErrorElement:Expected annotation identifier after '@'
             PsiElement(AT)('@')
-          PsiWhiteSpace(' ')
-          INTEGER_CONSTANT
-            PsiElement(INTEGER_LITERAL)('1')
+          PsiWhiteSpace('\n  ')
+          RETURN
+            PsiElement(return)('return')
+            PsiErrorElement:Label must be named
+              PsiElement(AT)('@')
+            ANNOTATED_EXPRESSION
+              PsiErrorElement:Expected annotation identifier after '@'
+                PsiElement(AT)('@')
+              PsiWhiteSpace(' ')
+              INTEGER_CONSTANT
+                PsiElement(INTEGER_LITERAL)('1')
       PsiWhiteSpace('\n\n  ')
       BREAK
         PsiElement(break)('break')

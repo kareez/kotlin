@@ -345,14 +345,9 @@ public class JetExpressionParsing extends AbstractJetParsing {
         if (at(LBRACKET) || at(AT)) {
             if (!parseLocalDeclaration()) {
                 PsiBuilder.Marker expression = mark();
-                if (myJetParsing.parseAnnotations(ONLY_ESCAPED_REGULAR_ANNOTATIONS)) {
-                    parsePrefixExpression();
-                    expression.done(ANNOTATED_EXPRESSION);
-                }
-                else {
-                    expression.drop();
-                    parsePrefixExpression();
-                }
+                myJetParsing.parseAnnotations(ONLY_ESCAPED_REGULAR_ANNOTATIONS);
+                parsePrefixExpression();
+                expression.done(ANNOTATED_EXPRESSION);
             }
         }
         else {

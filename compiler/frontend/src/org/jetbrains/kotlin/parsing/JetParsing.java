@@ -573,11 +573,11 @@ public class JetParsing extends AbstractJetParsing {
             if (myBuilder.rawLookup(1) == IDENTIFIER) {
                 advance(); // AT
                 parseAnnotationEntry();
-                return true;
             }
             else {
                 errorAndAdvance("Expected annotation identifier after '@'", 1);
             }
+            return true;
         }
 
         return false;

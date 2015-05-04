@@ -170,11 +170,12 @@ JetFile: declarationsWsAfterAt.kt
         BLOCK
           PsiElement(LBRACE)('{')
           PsiWhiteSpace('\n        ')
-          PsiErrorElement:Expected annotation identifier after '@'
-            PsiElement(AT)('@')
-          PsiWhiteSpace(' ')
-          REFERENCE_EXPRESSION
-            PsiElement(IDENTIFIER)('data')
+          ANNOTATED_EXPRESSION
+            PsiErrorElement:Expected annotation identifier after '@'
+              PsiElement(AT)('@')
+            PsiWhiteSpace(' ')
+            REFERENCE_EXPRESSION
+              PsiElement(IDENTIFIER)('data')
           PsiErrorElement:Unexpected tokens (use ';' to separate expressions on the same line)
             <empty list>
           PsiWhiteSpace(' ')
@@ -193,23 +194,24 @@ JetFile: declarationsWsAfterAt.kt
                   PsiElement(INTEGER_LITERAL)('1')
               PsiElement(RPAR)(')')
           PsiWhiteSpace('\n\n        ')
-          PsiErrorElement:Expected annotation identifier after '@'
-            PsiElement(AT)('@')
-          PsiWhiteSpace(' ')
-          CALL_EXPRESSION
-            REFERENCE_EXPRESSION
-              PsiElement(IDENTIFIER)('inline')
-            VALUE_ARGUMENT_LIST
-              PsiElement(LPAR)('(')
-              VALUE_ARGUMENT
-                REFERENCE_EXPRESSION
-                  PsiElement(IDENTIFIER)('option1')
-              PsiElement(COMMA)(',')
-              PsiWhiteSpace(' ')
-              VALUE_ARGUMENT
-                REFERENCE_EXPRESSION
-                  PsiElement(IDENTIFIER)('option2')
-              PsiElement(RPAR)(')')
+          ANNOTATED_EXPRESSION
+            PsiErrorElement:Expected annotation identifier after '@'
+              PsiElement(AT)('@')
+            PsiWhiteSpace(' ')
+            CALL_EXPRESSION
+              REFERENCE_EXPRESSION
+                PsiElement(IDENTIFIER)('inline')
+              VALUE_ARGUMENT_LIST
+                PsiElement(LPAR)('(')
+                VALUE_ARGUMENT
+                  REFERENCE_EXPRESSION
+                    PsiElement(IDENTIFIER)('option1')
+                PsiElement(COMMA)(',')
+                PsiWhiteSpace(' ')
+                VALUE_ARGUMENT
+                  REFERENCE_EXPRESSION
+                    PsiElement(IDENTIFIER)('option2')
+                PsiElement(RPAR)(')')
           PsiWhiteSpace('\n\n        ')
           FUN
             MODIFIER_LIST
@@ -250,16 +252,18 @@ JetFile: declarationsWsAfterAt.kt
             REFERENCE_EXPRESSION
               PsiElement(IDENTIFIER)('private')
           PsiWhiteSpace('\n        ')
-          PsiErrorElement:Expected annotation identifier after '@'
-            PsiElement(AT)('@')
-          REFERENCE_EXPRESSION
-            PsiElement(IDENTIFIER)('abstract')
+          ANNOTATED_EXPRESSION
+            PsiErrorElement:Expected annotation identifier after '@'
+              PsiElement(AT)('@')
+            REFERENCE_EXPRESSION
+              PsiElement(IDENTIFIER)('abstract')
           PsiWhiteSpace('\n        ')
-          PsiErrorElement:Expected annotation identifier after '@'
-            PsiElement(AT)('@')
-          PsiWhiteSpace(' ')
-          REFERENCE_EXPRESSION
-            PsiElement(IDENTIFIER)('volatile')
+          ANNOTATED_EXPRESSION
+            PsiErrorElement:Expected annotation identifier after '@'
+              PsiElement(AT)('@')
+            PsiWhiteSpace(' ')
+            REFERENCE_EXPRESSION
+              PsiElement(IDENTIFIER)('volatile')
           PsiErrorElement:Unexpected tokens (use ';' to separate expressions on the same line)
             <empty list>
           PsiWhiteSpace(' ')
