@@ -671,6 +671,12 @@ public class JetParsingTestGenerated extends AbstractJetParsingTest {
                     JetTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("compiler/testData/psi/annotation/at"), Pattern.compile("^(.*)\\.kts?$"), true);
                 }
 
+                @TestMetadata("annotationAtFileStart.kt")
+                public void testAnnotationAtFileStart() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/at/annotationAtFileStart.kt");
+                    doParsingTest(fileName);
+                }
+
                 @TestMetadata("declarationsJustAtTyped.kt")
                 public void testDeclarationsJustAtTyped() throws Exception {
                     String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/at/declarationsJustAtTyped.kt");
@@ -686,6 +692,12 @@ public class JetParsingTestGenerated extends AbstractJetParsingTest {
                 @TestMetadata("invalidExpressions.kt")
                 public void testInvalidExpressions() throws Exception {
                     String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/at/invalidExpressions.kt");
+                    doParsingTest(fileName);
+                }
+
+                @TestMetadata("modifierAtFileStart.kt")
+                public void testModifierAtFileStart() throws Exception {
+                    String fileName = JetTestUtils.navigationMetadata("compiler/testData/psi/annotation/at/modifierAtFileStart.kt");
                     doParsingTest(fileName);
                 }
 

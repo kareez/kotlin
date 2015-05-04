@@ -124,8 +124,8 @@ JetFile: recovery.kt
               PsiElement(return)('return')
             PsiWhiteSpace('\n        ')
             ANNOTATED_EXPRESSION
-              PsiElement(AT)('@')
               ANNOTATION_ENTRY
+                PsiElement(AT)('@')
                 CONSTRUCTOR_CALLEE
                   TYPE_REFERENCE
                     USER_TYPE

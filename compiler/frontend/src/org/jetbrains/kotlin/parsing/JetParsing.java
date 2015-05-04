@@ -437,9 +437,6 @@ public class JetParsing extends AbstractJetParsing {
                     if (!annotationParsingMode.allowAtAnnotations) {
                         errorAndAdvance("Only annotations in '[]' can be declared here"); // AT
                     }
-                    else {
-                        advance(); // AT
-                    }
 
                     if (!tryParseModifier(tokenConsumer)) {
                         parseAnnotationEntry();
@@ -470,11 +467,23 @@ public class JetParsing extends AbstractJetParsing {
     }
 
     private boolean tryParseModifier(@Nullable Consumer<IElementType> tokenConsumer) {
+        PsiBuilder.Marker marker = mark();
+
+        if (at(AT)) {
+            advance(); // AT
+        }
+
         if (atSet(MODIFIER_KEYWORDS)) {
-            if (tokenConsumer != null) tokenConsumer.consume(tt());
+            IElementType tt = tt();
+            if (tokenConsumer != null) {
+                tokenConsumer.consume(tt);
+            }
             advance(); // MODIFIER
+            marker.collapse(tt);
             return true;
         }
+
+        marker.rollbackTo();
         return false;
     }
 
@@ -571,11 +580,10 @@ public class JetParsing extends AbstractJetParsing {
         }
         else if (mode.allowAtAnnotations && at(AT)) {
             if (myBuilder.rawLookup(1) == IDENTIFIER) {
-                advance(); // AT
                 parseAnnotationEntry();
             }
             else {
-                errorAndAdvance("Expected annotation identifier after '@'", 1);
+                errorAndAdvance("Expected annotation identifier after '@'", 1); // AT
             }
             return true;
         }
@@ -589,9 +597,13 @@ public class JetParsing extends AbstractJetParsing {
      *   ;
      */
     private void parseAnnotationEntry() {
-        assert _at(IDENTIFIER);
+        assert _at(IDENTIFIER) || (_at(AT) && myBuilder.rawLookup(1) == IDENTIFIER);
 
         PsiBuilder.Marker annotation = mark();
+
+        if (at(AT)) {
+            advance(); // AT
+        }
 
         PsiBuilder.Marker reference = mark();
         PsiBuilder.Marker typeReference = mark();

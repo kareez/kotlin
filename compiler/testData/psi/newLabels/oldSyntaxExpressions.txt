@@ -13,8 +13,8 @@ JetFile: oldSyntaxExpressions.kt
       PsiElement(LBRACE)('{')
       PsiWhiteSpace('\n    ')
       ANNOTATED_EXPRESSION
-        PsiElement(AT)('@')
         ANNOTATION_ENTRY
+          PsiElement(AT)('@')
           CONSTRUCTOR_CALLEE
             TYPE_REFERENCE
               USER_TYPE
@@ -76,8 +76,8 @@ JetFile: oldSyntaxExpressions.kt
         PARENTHESIZED
           PsiElement(LPAR)('(')
           ANNOTATED_EXPRESSION
-            PsiElement(AT)('@')
             ANNOTATION_ENTRY
+              PsiElement(AT)('@')
               CONSTRUCTOR_CALLEE
                 TYPE_REFERENCE
                   USER_TYPE

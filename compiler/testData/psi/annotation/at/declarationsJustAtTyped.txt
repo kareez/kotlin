@@ -182,8 +182,8 @@ JetFile: declarationsJustAtTyped.kt
               PsiErrorElement:Expected modifier or annotation after '@'
                 PsiElement(AT)('@')
               PsiWhiteSpace('\n        ')
-              PsiElement(AT)('@')
               ANNOTATION_ENTRY
+                PsiElement(AT)('@')
                 CONSTRUCTOR_CALLEE
                   TYPE_REFERENCE
                     USER_TYPE
@@ -214,8 +214,8 @@ JetFile: declarationsJustAtTyped.kt
                         PsiErrorElement:Expected modifier or annotation after '@'
                           PsiElement(AT)('@')
                         PsiWhiteSpace(' ')
-                        PsiElement(AT)('@')
                         ANNOTATION_ENTRY
+                          PsiElement(AT)('@')
                           CONSTRUCTOR_CALLEE
                             TYPE_REFERENCE
                               USER_TYPE
