@@ -383,9 +383,15 @@ JetFile: MultiVariableDeclarations.kt
         PsiElement(COMMA)(',')
         PsiWhiteSpace(' ')
         MULTI_VARIABLE_DECLARATION_ENTRY
-          PsiElement(IDENTIFIER)('b')
-        PsiErrorElement:Expecting ')'
-          <empty list>
+          MODIFIER_LIST
+            ANNOTATION_ENTRY
+              CONSTRUCTOR_CALLEE
+                TYPE_REFERENCE
+                  USER_TYPE
+                    REFERENCE_EXPRESSION
+                      PsiElement(IDENTIFIER)('b')
+          PsiErrorElement:Expecting a name
+            <empty list>
         PsiWhiteSpace(' ')
         PsiElement(EQ)('=')
         PsiWhiteSpace(' ')

@@ -1172,6 +1172,9 @@ public class JetParsing extends AbstractJetParsing {
                     break;
                 }
                 PsiBuilder.Marker property = mark();
+
+                parseModifierListWithUnescapedAnnotations(TokenSet.create(COMMA, RPAR, COLON, IN_KEYWORD));
+
                 expect(IDENTIFIER, "Expecting a name", recoverySet);
 
                 if (at(COLON)) {
@@ -1229,7 +1232,7 @@ public class JetParsing extends AbstractJetParsing {
         if (setter) {
             PsiBuilder.Marker parameterList = mark();
             PsiBuilder.Marker setterParameter = mark();
-            parseModifierListWithUnescapedAnnotations(TokenSet.create(IDENTIFIER), TokenSet.create(RPAR, COMMA, COLON));
+            parseModifierListWithUnescapedAnnotations(TokenSet.create(COMMA, RPAR, COLON));
             expect(IDENTIFIER, "Expecting parameter name", TokenSet.create(RPAR, COLON, LBRACE, EQ));
 
             if (at(COLON)) {
@@ -1614,7 +1617,7 @@ public class JetParsing extends AbstractJetParsing {
 
         PsiBuilder.Marker mark = mark();
 
-        parseModifierListWithUnescapedAnnotations(TokenSet.create(IDENTIFIER), TokenSet.create(COMMA, GT, COLON));
+        parseModifierListWithUnescapedAnnotations(TokenSet.create(COMMA, GT, COLON));
 
         expect(IDENTIFIER, "Type parameter name expected", TokenSet.EMPTY);
 
@@ -1916,8 +1919,8 @@ public class JetParsing extends AbstractJetParsing {
         return atGT;
     }
 
-    private void parseModifierListWithUnescapedAnnotations(TokenSet lookFor, TokenSet stopAt) {
-        int lastId = findLastBefore(lookFor, stopAt, false);
+    public void parseModifierListWithUnescapedAnnotations(TokenSet stopAt) {
+        int lastId = findLastBefore(IDENTIFIER, stopAt, false);
         createTruncatedBuilder(lastId).parseModifierList(ALLOW_UNESCAPED_REGULAR_ANNOTATIONS);
     }
 
@@ -2061,7 +2064,7 @@ public class JetParsing extends AbstractJetParsing {
     private boolean parseValueParameter(boolean rollbackOnFailure, boolean typeRequired) {
         PsiBuilder.Marker parameter = mark();
 
-        parseModifierListWithUnescapedAnnotations(TokenSet.create(IDENTIFIER), TokenSet.create(COMMA, RPAR, COLON));
+        parseModifierListWithUnescapedAnnotations(TokenSet.create(COMMA, RPAR, COLON));
 
         if (at(VAR_KEYWORD) || at(VAL_KEYWORD)) {
             advance(); // VAR_KEYWORD | VAL_KEYWORD

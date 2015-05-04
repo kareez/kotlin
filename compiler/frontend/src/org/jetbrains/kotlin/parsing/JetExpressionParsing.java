@@ -1471,6 +1471,9 @@ public class JetExpressionParsing extends AbstractJetParsing {
                     parameter.done(MULTI_VARIABLE_DECLARATION);
                 }
                 else {
+                    if (!at(IN_KEYWORD)) {
+                        myJetParsing.parseModifierListWithUnescapedAnnotations(TokenSet.create(IN_KEYWORD, RPAR, COLON));
+                    }
                     expect(IDENTIFIER, "Expecting a variable name", TokenSet.create(COLON, IN_KEYWORD));
 
                     if (at(COLON)) {
