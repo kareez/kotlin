@@ -40,3 +40,8 @@ private @open [Ann1(1)] @Ann2("1") Ann3("2") class A(
 @private val x = 1
 
 @inline private fun bar() = 1
+
+fun bar() {
+    try {}
+    catch (@volatile e: Exception) {}
+}

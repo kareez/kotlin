@@ -529,3 +529,51 @@ JetFile: validDeclarations.kt
     PsiWhiteSpace(' ')
     INTEGER_CONSTANT
       PsiElement(INTEGER_LITERAL)('1')
+  PsiWhiteSpace('\n\n')
+  FUN
+    PsiElement(fun)('fun')
+    PsiWhiteSpace(' ')
+    PsiElement(IDENTIFIER)('bar')
+    VALUE_PARAMETER_LIST
+      PsiElement(LPAR)('(')
+      PsiElement(RPAR)(')')
+    PsiWhiteSpace(' ')
+    BLOCK
+      PsiElement(LBRACE)('{')
+      PsiWhiteSpace('\n    ')
+      TRY
+        PsiElement(try)('try')
+        PsiWhiteSpace(' ')
+        BLOCK
+          PsiElement(LBRACE)('{')
+          PsiElement(RBRACE)('}')
+        PsiWhiteSpace('\n    ')
+        CATCH
+          PsiElement(catch)('catch')
+          PsiWhiteSpace(' ')
+          VALUE_PARAMETER_LIST
+            PsiElement(LPAR)('(')
+            VALUE_PARAMETER
+              MODIFIER_LIST
+                ANNOTATION_ENTRY
+                  PsiElement(AT)('@')
+                  CONSTRUCTOR_CALLEE
+                    TYPE_REFERENCE
+                      USER_TYPE
+                        REFERENCE_EXPRESSION
+                          PsiElement(IDENTIFIER)('volatile')
+              PsiWhiteSpace(' ')
+              PsiElement(IDENTIFIER)('e')
+              PsiElement(COLON)(':')
+              PsiWhiteSpace(' ')
+              TYPE_REFERENCE
+                USER_TYPE
+                  REFERENCE_EXPRESSION
+                    PsiElement(IDENTIFIER)('Exception')
+            PsiElement(RPAR)(')')
+          PsiWhiteSpace(' ')
+          BLOCK
+            PsiElement(LBRACE)('{')
+            PsiElement(RBRACE)('}')
+      PsiWhiteSpace('\n')
+      PsiElement(RBRACE)('}')
