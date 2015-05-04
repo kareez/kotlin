@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.psi
 
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiWhiteSpace
+import kotlin.properties.Delegates
 
 public class JetFunctionLiteralArgument(node: ASTNode) : JetValueArgument(node) {
 
@@ -26,13 +27,14 @@ public class JetFunctionLiteralArgument(node: ASTNode) : JetValueArgument(node) 
 
     override fun getArgumentExpression() = super.getArgumentExpression() ?: assertFL()
 
-    public fun getFunctionLiteral(): JetFunctionLiteralExpression {
-        val expression = getArgumentExpression()
+    public fun getFunctionLiteral(): JetFunctionLiteralExpression = unpackFunctionLiteral(getArgumentExpression())
 
-        return when (expression) {
-            is JetLabeledExpression -> expression.getBaseExpression() as? JetFunctionLiteralExpression ?: assertFL()
-            else -> expression as? JetFunctionLiteralExpression ?: assertFL()
-        }
-    }
+    private fun unpackFunctionLiteral(expression: JetExpression?): JetFunctionLiteralExpression =
+            when (expression) {
+                is JetFunctionLiteralExpression -> expression
+                is JetLabeledExpression -> unpackFunctionLiteral(expression.getBaseExpression())
+                is JetAnnotatedExpression -> unpackFunctionLiteral(expression.getBaseExpression())
+                else -> assertFL()
+            }
 }
 
